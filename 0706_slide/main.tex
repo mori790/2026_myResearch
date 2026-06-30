@@ -1,0 +1,145 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+
+\title{Educational Paxos Simulator}
+\subtitle{Refactoring and Failure Scenarios}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Presentation Summary}
+  \begin{itemize}
+    \item I extended my Paxos simulator after implementing the basic protocol.
+    \item First, I refactored \texttt{simulator.py} to separate responsibilities.
+    \item Then, I added \texttt{network.py} to simulate message delivery, delay, and loss.
+    \item Finally, I implemented failure scenarios such as late old messages and leader conflict.
+  \end{itemize}
+
+  \begin{block}{Main goal}
+    Understand why Paxos needs proposal numbers, Prepare / Promise, and careful message handling.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Refactored Simulator}
+  \begin{block}{Before refactoring}
+    \texttt{PaxosSimulator} handled too much logic by itself.
+  \end{block}
+
+  \begin{block}{After refactoring}
+    The responsibilities are separated into \texttt{Proposer}, \texttt{Acceptor}, and \texttt{PaxosSimulator}.
+  \end{block}
+
+  \begin{itemize}
+    \item \texttt{Proposer} creates messages and stores responses.
+    \item \texttt{Acceptor} decides whether to promise or accept.
+    \item \texttt{PaxosSimulator} only coordinates the protocol flow.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why Refactoring Helps}
+  \begin{itemize}
+    \item The code now matches the Paxos roles more clearly.
+    \item It is easier to understand what each component is responsible for.
+    \item It prepares the project for network simulation.
+    \item Failure scenarios can be implemented without putting all logic into the simulator.
+  \end{itemize}
+
+  \begin{block}{Key idea}
+    The simulator should control the flow, but the Paxos logic should belong to the nodes.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Network.py}
+  \begin{itemize}
+    \item \texttt{network.py} simulates an unreliable network.
+    \item It does not use real sockets or TCP.
+    \item Instead, it manages messages inside the program.
+  \end{itemize}
+
+  \begin{block}{Main operations}
+    \texttt{send()}, \texttt{delay()}, \texttt{drop()}, and \texttt{deliver\_one()}
+  \end{block}
+
+  \begin{itemize}
+    \item This makes message delay and message loss explicit.
+    \item It also makes Paxos failure scenarios easier to reproduce.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Late Old Message Scenario}
+  \begin{enumerate}
+    \item P1 sends \texttt{Prepare(1)}.
+    \item P1 creates \texttt{AcceptRequest(1, A)}, but the network delays it.
+    \item Before it arrives, P2 sends \texttt{Prepare(2)}.
+    \item The Acceptor promises proposal number 2.
+    \item Then the delayed \texttt{AcceptRequest(1, A)} arrives.
+    \item The Acceptor rejects it because proposal number 1 is now old.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Lesson from Late Old Message}
+  \begin{block}{What this scenario shows}
+    Old messages may arrive after newer messages in a distributed system.
+  \end{block}
+
+  \begin{itemize}
+    \item Proposal numbers protect the system from old leaders.
+    \item Once an Acceptor promises a newer proposal number, it rejects older requests.
+    \item This prevents delayed old messages from breaking the current round.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Leader Conflict Scenario}
+  \begin{itemize}
+    \item This scenario intentionally skips \texttt{Prepare / Promise}.
+    \item P1 sends \texttt{AcceptRequest(1, A)} to A1 and A2.
+    \item A is chosen by a majority.
+    \item P2 sends \texttt{AcceptRequest(2, B)} to A2 and A3.
+    \item B is also chosen by a majority.
+  \end{itemize}
+
+  \begin{alertblock}{Problem}
+    Two different values are chosen for the same slot.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Why Paxos Prevents Conflict}
+  \begin{itemize}
+    \item In real Paxos, P2 cannot skip \texttt{Prepare}.
+    \item P2 must collect \texttt{Promise} messages first.
+    \item If a value was already accepted, the Promise includes that information.
+    \item Therefore, P2 learns about the previous value before sending \texttt{AcceptRequest}.
+  \end{itemize}
+
+  \begin{block}{Key point}
+    Prepare / Promise prevents a new leader from blindly overwriting a value that may already be chosen.
+  \end{block}
+\end{frame}
+
+\begin{frame}{What I Learned}
+  \begin{itemize}
+    \item Paxos safety depends on both proposal numbers and majority agreement.
+    \item Refactoring made the protocol roles easier to understand.
+    \item Network simulation made message delay and message loss concrete.
+    \item Leader conflict shows why Prepare / Promise is necessary.
+    \item Paxos is easier to understand by implementing failure scenarios step by step.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Next Steps}
+  \begin{itemize}
+    \item Add more network-based scenarios.
+    \item Implement network partition.
+    \item Add safety tests.
+    \item Extend the simulator from single-value Paxos to multi-slot Paxos.
+    \item Write a README explaining each scenario.
+  \end{itemize}
+\end{frame}
+
+\end{document}
