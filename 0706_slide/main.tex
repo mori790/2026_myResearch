@@ -179,8 +179,6 @@
 \begin{frame}{Part 2: Why I Am Interested in RAG}
   \begin{itemize}
     \item I became interested in Retrieval-Augmented Generation, or RAG, through my previous university research.
-    \item In that work, I studied how external knowledge can be used to improve the reliability of LLM outputs.
-    \item However, this also means that RAG is not only an AI problem, but also a data management problem.
   \end{itemize}
 
   \begin{block}{Motivation}
@@ -248,9 +246,7 @@
 % --------------------
 \begin{frame}{Why This Is a Distributed Systems Problem}
   \begin{itemize}
-    \item Production RAG systems may use replicated or sharded vector indexes.
     \item Updates and deletions must propagate across multiple components.
-    \item Queries may reach stale replicas or stale cached results.
     \item Different parts of the RAG pipeline may observe different versions of the knowledge base.
   \end{itemize}
 
@@ -266,7 +262,6 @@
   \begin{itemize}
     \item Through the Paxos simulator, I learned how distributed protocols preserve safety under message delay and leader conflict.
     \item Through the RAG paper review, I found that RAG also has system-level reliability problems.
-    \item My current research interest is to connect these two directions.
     \item I want to study RAG as a distributed data system where versioning, freshness, deletion, and consistency must be guaranteed.
   \end{itemize}
 \end{frame}

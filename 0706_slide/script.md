@@ -6,9 +6,6 @@ First, I will talk about my educational Paxos simulator.
 In this part, I refactored the simulator, added a simple network layer, and implemented failure scenarios.
 
 Second, I will explain my current research direction after reviewing recent RAG papers.
-
-The main goal of this presentation is to connect my implementation practice with my broader research interest in distributed systems.
-
 ---
 
 ## Slide 2: Part 1: Educational Paxos Simulator
@@ -16,11 +13,6 @@ The main goal of this presentation is to connect my implementation practice with
 First, I will explain my educational Paxos simulator.
 
 I extended the simulator beyond the basic Paxos flow.
-
-The goal is not to build a production-level Paxos system.
-Instead, the goal is to understand why Paxos needs proposal numbers, Prepare and Promise messages, majority agreement, and careful message handling.
-
-Paxos is difficult to understand only from theory, so I tried to make the behavior of the protocol visible through code.
 
 In particular, I focused on failure scenarios, because failures make the role of each Paxos mechanism much clearer.
 
