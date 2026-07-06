@@ -72,29 +72,6 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Late Old Message Scenario}
-  \begin{enumerate}
-    \item P1 sends \texttt{Prepare(1)}.
-    \item P1 creates \texttt{AcceptRequest(1, A)}, but the network delays it.
-    \item Before it arrives, P2 sends \texttt{Prepare(2)}.
-    \item The Acceptor promises proposal number 2.
-    \item Then the delayed \texttt{AcceptRequest(1, A)} arrives.
-    \item The Acceptor rejects it because proposal number 1 is now old.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Lesson from Late Old Message}
-  \begin{block}{What this scenario shows}
-    Old messages may arrive after newer messages in a distributed system.
-  \end{block}
-
-  \begin{itemize}
-    \item Proposal numbers protect the system from old leaders.
-    \item Once an Acceptor promises a newer proposal number, it rejects older requests.
-    \item This prevents delayed old messages from breaking the current round.
-  \end{itemize}
-\end{frame}
-
 \begin{frame}{Leader Conflict Scenario}
   \begin{itemize}
     \item This scenario intentionally skips \texttt{Prepare / Promise}.
