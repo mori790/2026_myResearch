@@ -50,6 +50,17 @@ references.bib  # 参考文献
 ```
 
 ## How to Build Slides
+MacTeXを入れる
+```bash
+brew install --cask mactex
+```
+
+その後、確認します。
+```bash
+which pdflatex
+which lualatex
+kpsewhich beamer.cls
+```
 
 LaTeX / Beamer を使用する場合は、各発表ディレクトリ内で以下を実行します。
 

@@ -1,121 +1,273 @@
 \documentclass[aspectratio=169]{beamer}
 
 \usetheme{Madrid}
+\usecolortheme{default}
 
-\title{Educational Paxos Simulator}
-\subtitle{Refactoring and Failure Scenarios}
-\author{}
-\date{}
+\title{Research Progress}
+\subtitle{Paxos Simulator and RAG Research Direction}
+\author{Chiharu Tomimori}
+\date{2026/7/6}
 
 \begin{document}
 
+% --------------------
+% Title
+% --------------------
 \begin{frame}
   \titlepage
 \end{frame}
 
-\begin{frame}{Presentation Summary}
+% --------------------
+% Slide 1
+% --------------------
+\begin{frame}{Presentation Overview}
   \begin{itemize}
-    \item I extended my Paxos simulator after implementing the basic protocol.
-    \item First, I refactored \texttt{simulator.py} to separate responsibilities.
-    \item Then, I added \texttt{network.py} to simulate message delivery, delay, and loss.
-    \item Finally, I implemented failure scenarios such as late old messages and leader conflict.
+    \item Today, I will explain two parts of my recent progress.
+    \item First, I will explain my educational Paxos simulator.
+    \item I refactored the simulator, added a simple network layer, and implemented failure scenarios.
+    \item Second, I will explain my current research direction after reviewing recent RAG papers.
+    \item The main goal is to connect my implementation practice with my broader research interest in distributed systems.
+  \end{itemize}
+\end{frame}
+
+% --------------------
+% Slide 2
+% --------------------
+\begin{frame}{Part 1: Educational Paxos Simulator}
+  \begin{itemize}
+    \item I extended the simulator beyond the basic Paxos flow.
+    \item The goal is not to build a production-level Paxos system.
+    \item Instead, the goal is to understand why Paxos needs:
+    \begin{itemize}
+      \item proposal numbers,
+      \item Prepare / Promise,
+      \item majority agreement,
+      \item careful message handling.
+    \end{itemize}
+    \item I focused on making failure scenarios visible through code.
+  \end{itemize}
+\end{frame}
+
+% --------------------
+% Slide 3
+% --------------------
+\begin{frame}{Paxos Simulator: Main Updates}
+  \begin{itemize}
+    \item I made three main updates.
   \end{itemize}
 
-  \begin{block}{Main goal}
-    Understand why Paxos needs proposal numbers, Prepare / Promise, and careful message handling.
+  \vspace{0.5em}
+
+  \begin{enumerate}
+    \item Refactored \texttt{simulator.py}
+    \item Added \texttt{network.py}
+    \item Implemented failure scenarios
+  \end{enumerate}
+
+  \vspace{0.5em}
+
+  \begin{block}{Main Goal}
+    Understand why Paxos is designed this way by observing how it behaves under failure scenarios.
   \end{block}
 \end{frame}
 
+% --------------------
+% Slide 4
+% --------------------
 \begin{frame}{Refactored Simulator}
-  \begin{block}{Before refactoring}
-    \texttt{PaxosSimulator} handled too much logic by itself.
-  \end{block}
-
-  \begin{block}{After refactoring}
-    The responsibilities are separated into \texttt{Proposer}, \texttt{Acceptor}, and \texttt{PaxosSimulator}.
-  \end{block}
-
   \begin{itemize}
-    \item \texttt{Proposer} creates messages and stores responses.
-    \item \texttt{Acceptor} decides whether to promise or accept.
-    \item \texttt{PaxosSimulator} only coordinates the protocol flow.
+    \item Before refactoring, \texttt{PaxosSimulator} handled most of the logic by itself.
+    \item It created Prepare messages, collected Promise messages, selected values, created AcceptRequest messages, and collected Accepted responses.
+    \item This worked, but it made the roles unclear.
+    \item After refactoring, I separated the logic into three parts:
+    \begin{itemize}
+      \item \texttt{Proposer}: creates messages and stores responses.
+      \item \texttt{Acceptor}: decides whether to promise or accept.
+      \item \texttt{PaxosSimulator}: coordinates the overall protocol flow.
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
+% --------------------
+% Slide 5
+% --------------------
 \begin{frame}{Why Refactoring Helps}
   \begin{itemize}
-    \item The code now matches the Paxos roles more clearly.
-    \item It is easier to understand what each component is responsible for.
-    \item It prepares the project for network simulation.
-    \item Failure scenarios can be implemented without putting all logic into the simulator.
+    \item Paxos has clear roles in theory.
+    \item If all logic is inside the simulator, it becomes hard to see what each node does.
+    \item After refactoring, each class has a specific responsibility.
+    \item This also makes future extensions easier.
+    \item For example, when I added \texttt{network.py}, the simulator did not need to contain all network-related logic.
   \end{itemize}
 
-  \begin{block}{Key idea}
+  \begin{block}{Key Idea}
     The simulator should control the flow, but the Paxos logic should belong to the nodes.
   \end{block}
 \end{frame}
 
-\begin{frame}{Network.py}
+% --------------------
+% Slide 6
+% --------------------
+\begin{frame}{Network Layer}
   \begin{itemize}
-    \item \texttt{network.py} simulates an unreliable network.
+    \item I added \texttt{network.py} to simulate an unreliable network.
     \item It does not use real sockets or TCP.
     \item Instead, it manages messages inside the program.
-  \end{itemize}
-
-  \begin{block}{Main operations}
-    \texttt{send()}, \texttt{delay()}, \texttt{drop()}, and \texttt{deliver\_one()}
-  \end{block}
-
-  \begin{itemize}
-    \item This makes message delay and message loss explicit.
-    \item It also makes Paxos failure scenarios easier to reproduce.
+    \item The main operations are:
+    \begin{itemize}
+      \item \texttt{send}
+      \item \texttt{delay}
+      \item \texttt{drop}
+      \item \texttt{deliver\_one}
+    \end{itemize}
+    \item This allows me to explicitly control message delivery, delay, and loss.
   \end{itemize}
 \end{frame}
 
+% --------------------
+% Slide 9
+% --------------------
 \begin{frame}{Leader Conflict Scenario}
   \begin{itemize}
-    \item This scenario intentionally skips \texttt{Prepare / Promise}.
+    \item This scenario intentionally skips Prepare and Promise.
     \item P1 sends \texttt{AcceptRequest(1, A)} to A1 and A2.
-    \item A is chosen by a majority.
-    \item P2 sends \texttt{AcceptRequest(2, B)} to A2 and A3.
-    \item B is also chosen by a majority.
+    \item Since A1 and A2 form a majority, value A becomes chosen.
+    \item Then P2 sends \texttt{AcceptRequest(2, B)} to A2 and A3.
+    \item A2 and A3 also form a majority, so value B also becomes chosen.
+    \item Now two different values are chosen for the same slot.
   \end{itemize}
 
-  \begin{alertblock}{Problem}
-    Two different values are chosen for the same slot.
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Why Paxos Prevents Conflict}
-  \begin{itemize}
-    \item In real Paxos, P2 cannot skip \texttt{Prepare}.
-    \item P2 must collect \texttt{Promise} messages first.
-    \item If a value was already accepted, the Promise includes that information.
-    \item Therefore, P2 learns about the previous value before sending \texttt{AcceptRequest}.
-  \end{itemize}
-
-  \begin{block}{Key point}
-    Prepare / Promise prevents a new leader from blindly overwriting a value that may already be chosen.
+  \begin{block}{Problem}
+    This is a safety violation.
   \end{block}
 \end{frame}
 
-\begin{frame}{What I Learned}
+% --------------------
+% Slide 10
+% --------------------
+\begin{frame}{Why Paxos Prevents Leader Conflict}
   \begin{itemize}
-    \item Paxos safety depends on both proposal numbers and majority agreement.
-    \item Refactoring made the protocol roles easier to understand.
-    \item Network simulation made message delay and message loss concrete.
-    \item Leader conflict shows why Prepare / Promise is necessary.
-    \item Paxos is easier to understand by implementing failure scenarios step by step.
+    \item In real Paxos, P2 cannot simply skip Prepare and send AcceptRequest.
+    \item Before sending AcceptRequest, P2 must collect Promise messages.
+    \item If an Acceptor has already accepted a value, it includes that value in its Promise.
+    \item In the leader conflict example, A2 would tell P2 that value A was already accepted.
+    \item Therefore, P2 must inherit A and send \texttt{AcceptRequest(2, A)}.
+  \end{itemize}
+
+  \begin{block}{Key Lesson}
+    Prepare and Promise prevent a new leader from blindly overwriting a value that may already be chosen.
+  \end{block}
+\end{frame}
+
+% --------------------
+% Slide 11
+% --------------------
+\begin{frame}{What I Learned from the Simulator}
+  \begin{itemize}
+    \item Paxos safety depends on several mechanisms working together.
+    \item Proposal numbers protect the system from old leaders and old messages.
+    \item Majority agreement ensures that a value is chosen only when enough Acceptors accept it.
+    \item Prepare and Promise allow a new Proposer to learn about previously accepted values.
+    \item Refactoring helped me understand the roles more clearly.
+    \item Network simulation made abstract failure cases much more concrete.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Next Steps}
+% --------------------
+% Slide 13
+% --------------------
+\begin{frame}{Part 2: Why I Am Interested in RAG}
   \begin{itemize}
-    \item Add more network-based scenarios.
-    \item Implement network partition.
-    \item Add safety tests.
-    \item Extend the simulator from single-value Paxos to multi-slot Paxos.
-    \item Write a README explaining each scenario.
+    \item I became interested in Retrieval-Augmented Generation, or RAG, through my previous university research.
+    \item In that work, I studied how external knowledge can be used to improve the reliability of LLM outputs.
+    \item However, this also means that RAG is not only an AI problem, but also a data management problem.
+  \end{itemize}
+
+  \begin{block}{Motivation}
+    I want to study RAG from a distributed systems perspective.
+  \end{block}
+\end{frame}
+
+% --------------------
+% Slide 14
+% --------------------
+\begin{frame}{Main Question}
+  \begin{block}{Main Research Question}
+    How can we make RAG systems reliable when the knowledge base is dynamically updated?
+  \end{block}
+
+  \begin{itemize}
+    \item In real systems, documents are not static.
+    \item Documents can be added, updated, or deleted.
+    \item These changes must be reflected in chunks, embeddings, vector indexes, retrieved contexts, and citations.
+    \item If the propagation is incomplete, the LLM may generate answers based on stale or deleted information.
+  \end{itemize}
+\end{frame}
+
+% --------------------
+% Slide 15
+% --------------------
+\begin{frame}{Review Paper}
+  \begin{block}{Reviewed Paper}
+    \textit{Security and Privacy in Retrieval-Augmented Generation: Architectures, Threats, Defenses, and Future Directions for Building Trustworthy Systems}
+  \end{block}
+
+  \begin{itemize}
+    \item This review paper surveys security and privacy issues in RAG systems.
+    \item It shows that RAG introduces risks not only in the LLM, but also in retrieval, indexing, context construction, and generation.
+    \item The paper helped me understand that trustworthy RAG requires system-level design.
+    \item This motivated me to focus on reliability issues inside the RAG pipeline.
+  \end{itemize}
+\end{frame}
+
+% --------------------
+% Slide 16
+% --------------------
+\begin{frame}{Core Research Problem}
+  \begin{block}{Problem}
+    A RAG answer may be generated from outdated or inconsistent evidence.
+  \end{block}
+
+  \begin{center}
+    \Large
+    Document $\rightarrow$ Chunk $\rightarrow$ Embedding $\rightarrow$ Vector Index $\rightarrow$ Context $\rightarrow$ Answer
+  \end{center}
+
+  \vspace{0.8em}
+
+  \begin{itemize}
+    \item A document may be updated, but old chunks may remain.
+    \item Embeddings may be generated from outdated text.
+    \item Deleted documents may still exist in the vector index.
+    \item Citations may point to old document versions.
+  \end{itemize}
+\end{frame}
+
+% --------------------
+% Slide 17
+% --------------------
+\begin{frame}{Why This Is a Distributed Systems Problem}
+  \begin{itemize}
+    \item Production RAG systems may use replicated or sharded vector indexes.
+    \item Updates and deletions must propagate across multiple components.
+    \item Queries may reach stale replicas or stale cached results.
+    \item Different parts of the RAG pipeline may observe different versions of the knowledge base.
+  \end{itemize}
+
+  \begin{block}{Research Direction}
+    I want to study consistency guarantees for dynamic RAG systems, especially freshness, deletion guarantees, and snapshot consistency.
+  \end{block}
+\end{frame}
+
+% --------------------
+% Slide 18
+% --------------------
+\begin{frame}{Overall Conclusion}
+  \begin{itemize}
+    \item Through the Paxos simulator, I learned how distributed protocols preserve safety under message delay and leader conflict.
+    \item Through the RAG paper review, I found that RAG also has system-level reliability problems.
+    \item My current research interest is to connect these two directions.
+    \item I want to study RAG as a distributed data system where versioning, freshness, deletion, and consistency must be guaranteed.
   \end{itemize}
 \end{frame}
 

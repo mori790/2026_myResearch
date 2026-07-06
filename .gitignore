@@ -1,0 +1,33 @@
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.xdv
+
+# Beamer generated files
+*.nav
+*.snm
+*.vrb
+
+# latexmk
+*.pdfsync
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# LaTeX Workshop / build directories
+*.synctex(busy)
