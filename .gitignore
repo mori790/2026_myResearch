@@ -31,3 +31,4 @@
 
 # LaTeX Workshop / build directories
 *.synctex(busy)
+.vscode/*
