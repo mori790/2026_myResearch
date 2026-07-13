@@ -2,206 +2,118 @@
 
 Good afternoon everyone.
 
-Today, I will introduce *The Byzantine Generals Problem*, which was proposed by Lamport, Shostak, and Pease in 1982.
+Today, I will report what I learned about the theoretical foundations of Byzantine Fault Tolerance.
 
-This paper is one of the most influential works in distributed systems because it established the theoretical foundation for Byzantine Fault Tolerance.
+I studied *The Byzantine Generals Problem* because I wanted to understand PBFT more deeply, especially why PBFT requires (3f+1) replicas and multiple communication phases.
 
-I will explain the motivation, the problem setting, the OM algorithm, and finally how this work connects to PBFT.
-
----
-
-# Slide 2 — Overview
-
-This presentation consists of six parts.
-
-First, I will explain why Byzantine faults are more difficult than crash faults.
-
-Next, I will introduce the Byzantine Generals Problem and the concept of Interactive Consistency.
-
-Then, I will explain why three generals cannot solve the problem.
-
-After that, I will introduce the OM algorithm and explain why at least (3m+1) generals are required.
-
-Finally, I will discuss how these ideas led to PBFT.
+This presentation is therefore not a detailed paper summary. Instead, I will focus on the concepts that I understood and how they connect to PBFT.
 
 ---
 
-# Slide 3 — Crash Fault vs Byzantine Fault
+# Slide 2 — Why I Studied This Topic
 
-Before introducing the paper, let's compare two fault models.
+I am currently studying PBFT, but I realized that simply memorizing the protocol steps was not enough.
 
-On the left is a crash fault. In this model, a node simply stops responding. This is the fault model assumed by protocols such as Paxos and Raft.
+I wanted to understand why PBFT needs (3f+1) replicas, why Byzantine faults are more difficult than crash faults, and why replicas need to exchange messages with each other.
 
-On the right is a Byzantine fault. Here, a faulty node may send different messages to different nodes. It can lie, behave arbitrarily, or even act maliciously.
+For this reason, I read *The Byzantine Generals Problem* as theoretical background.
 
-Byzantine faults are much more difficult to handle because the faulty node is still communicating.
-
----
-
-# Slide 4 — Byzantine Generals Problem
-
-The paper explains the problem using a military example.
-
-There is one commander and several lieutenants surrounding a city.
-
-They must all make the same decision: either attack or retreat.
-
-If loyal generals choose different actions, they will lose the battle.
-
-Therefore, the goal is for all loyal generals to reach the same decision, even if some generals are traitors.
+My main goal was to understand the design principles behind Byzantine Fault Tolerance.
 
 ---
 
-# Slide 5 — Interactive Consistency
+# Slide 3 — My Understanding of Fault Models
 
-The paper defines correctness using two conditions called Interactive Consistency.
+First, I clarified the difference between crash faults and Byzantine faults.
 
-The first condition, IC1, requires that all loyal lieutenants obey the same order.
+In a crash fault, a node simply stops responding. Because the node becomes silent, its failure is relatively easy to observe.
 
-The second condition, IC2, states that if the commander is loyal, every loyal lieutenant must follow the commander's order.
+Paxos and Raft mainly consider this type of failure.
 
-These two conditions become the formal definition of correctness throughout the paper.
+In contrast, a Byzantine node can send incorrect messages.
+
+For example, it may send value X to one node and value Y to another node.
+
+This makes Byzantine faults much harder to handle.
+---
+
+# Slide 4 — The Core Problem I Understood
+
+The central problem is that correct nodes may observe different local views of the system.
+
+As I mentioned, the faulty node sends value X to Node B and value Y to Node C.
+
+As a result, B and C receive conflicting information.
+
+The important point is that Byzantine Fault Tolerance is not mainly about identifying which node is faulty.
+
+The real objective is to guarantee that correct nodes still make the same decision, even when they receive inconsistent information.
 
 ---
 
-# Slide 6 — Why Three Generals Are Impossible
+# Slide 6 — My Understanding of the (3f+1) Requirement
 
-Now let's see why three generals are not enough.
+From this impossibility result, I understood the meaning of the (3f+1) requirement.
 
-Suppose the commander is malicious.
+To tolerate one Byzantine fault, four nodes are required.
 
-The commander sends "Attack" to one lieutenant and "Retreat" to the other.
+To tolerate two Byzantine faults, seven nodes are required.
 
-The two lieutenants exchange their observations, but each lieutenant sees the same situation.
+The important realization is that this requirement is not an arbitrary engineering choice made by PBFT.
 
-One possibility is that the commander is lying. Another possibility is that the other lieutenant is lying.
+It comes from a fundamental limitation of Byzantine agreement.
 
-From their local information alone, they cannot distinguish these two worlds.
-
-Therefore, no deterministic algorithm can satisfy both IC1 and IC2.
+Correct nodes need enough independent reports so that faulty nodes cannot create two conflicting but apparently valid views.
 
 ---
 
-# Slide 7 — Information Ambiguity
+# Slide 7 — Why 3 nodes are not enough, But 4 nodes are
 
-This table illustrates the key idea of the impossibility proof.
+With three nodes, one Byzantine node can create conflicting views that correct nodes cannot distinguish.
 
-In two different worlds, Lieutenant B observes exactly the same information.
+With four nodes, the correct nodes can compare enough independent reports to overcome one faulty node.
 
-However, the actual traitor is different.
+Therefore, tolerating one Byzantine fault requires at least four nodes, which is the basis of the (3f+1) rule.
 
-Since B cannot distinguish between these two worlds, any decision rule will fail in at least one of them.
-
-This is an information-theoretic impossibility result.
-
-The problem is not identifying the traitor. The real problem is that loyal nodes do not have enough information to make a correct decision.
 
 ---
 
-# Slide 8 — Why (3m+1)?
+# Slide 10 — What I Understand Now
 
-The paper proves that to tolerate up to (m) Byzantine traitors, at least (3m+1) generals are required.
+At this point, I understand that Byzantine faults are fundamentally stronger than crash faults.
 
-For example, tolerating one traitor requires four generals, while tolerating two traitors requires seven generals.
+I also understand that the main objective is agreement among correct nodes, rather than identifying the faulty node.
 
-This formula is not specific to PBFT. It was first established in this paper and later became the theoretical foundation of Byzantine fault-tolerant consensus protocols.
+The (3f+1) requirement exists because correct nodes need enough overlapping support to prevent conflicting decisions.
 
----
+Finally, I understand the basic intuition behind PBFT.
 
-# Slide 9 — OM(0)
+Replicas do not trust the leader alone.
 
-The authors then introduce the Oral Messages algorithm, or OM.
-
-OM(0) assumes there are no traitors.
-
-The commander simply sends a value to every lieutenant, and each lieutenant adopts that value.
-
-Since there are no Byzantine faults, message forwarding is unnecessary.
+They exchange proposals, require enough matching messages, and try to preserve safety even when some replicas behave arbitrarily.
 
 ---
 
-# Slide 10 — OM(1)
+# Slide 12 — Next Steps
 
-OM(1) tolerates one Byzantine traitor.
+My next step is to read *Practical Byzantine Fault Tolerance*.
 
-First, the commander sends an order to every lieutenant.
+I will first focus on the system model and the normal-case protocol.
 
-Then, each lieutenant forwards the received order to every other lieutenant.
+Then, I plan to trace one request using four replicas with (f=1).
 
-Finally, every lieutenant performs majority voting.
+After that, I would like to implement a small PBFT simulator so that I can observe normal execution and Byzantine failure scenarios.
 
-The key idea is to verify information through multiple communication paths instead of trusting the commander alone.
-
----
-
-# Slide 11 — Example of OM(1)
-
-This slide shows an example where the commander is malicious.
-
-The commander sends inconsistent orders to different lieutenants.
-
-However, the loyal lieutenants exchange what they received.
-
-After collecting all reports, they perform majority voting.
-
-As a result, every loyal lieutenant reaches the same decision.
-
-The commander may lie, but loyal nodes can still agree.
+Finally, I will compare PBFT with Paxos, Raft, and HotStuff to clarify the differences in fault models, quorums, and communication patterns.
 
 ---
 
-# Slide 12 — General Form of OM(m)
+# Slide 13 — Takeaway
 
-OM(m) is defined recursively.
+To conclude, Byzantine Fault Tolerance is about creating a consistent shared decision even when some nodes provide conflicting information.
 
-Each lieutenant behaves like a commander and runs OM(m−1).
+By reading *The Byzantine Generals Problem*, I gained the theoretical basis needed to understand why PBFT requires (3f+1) replicas and why replicas must communicate in multiple phases.
 
-Therefore, OM(2) calls OM(1), and OM(1) calls OM(0).
-
-This recursive structure enables the protocol to tolerate increasingly more Byzantine faults.
-
----
-
-# Slide 13 — Message Depth
-
-One interesting observation is that deeper recursion is needed to tolerate more traitors.
-
-OM(0) requires one communication step.
-
-OM(1) requires two steps.
-
-OM(2) requires three steps.
-
-In general, tolerating more Byzantine faults requires more communication.
-
----
-
-# Slide 14 — Connection to PBFT
-
-Finally, let's connect this paper to PBFT.
-
-The Byzantine Generals Problem established the theoretical limits of Byzantine agreement.
-
-It introduced the OM algorithm and proved the (3m+1) requirement.
-
-PBFT builds directly on these results.
-
-Instead of recursive oral messages, PBFT introduces practical phases such as Pre-prepare, Prepare, Commit, and View Change to implement Byzantine fault-tolerant replication efficiently.
-
----
-
-# Slide 15 — Takeaways
-
-To summarize,
-
-Byzantine faults are much more challenging than crash faults because faulty nodes can send conflicting messages.
-
-The paper formalized correctness using Interactive Consistency.
-
-It proved that three generals cannot solve the problem when one may be a traitor.
-
-It also introduced the OM algorithm and established the famous (3m+1) requirement.
-
-Finally, these theoretical results became the foundation of PBFT and many modern Byzantine fault-tolerant consensus protocols.
+This gives me a stronger foundation for studying the actual PBFT protocol next.
 
 Thank you for listening.
