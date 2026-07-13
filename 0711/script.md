@@ -51,7 +51,7 @@ The real objective is to guarantee that correct nodes still make the same decisi
 
 ---
 
-# Slide 6 — My Understanding of the (3f+1) Requirement
+# Slide 5 — My Understanding of the (3f+1) Requirement
 
 From this impossibility result, I understood the meaning of the (3f+1) requirement.
 
@@ -67,7 +67,7 @@ Correct nodes need enough independent reports so that faulty nodes cannot create
 
 ---
 
-# Slide 7 — Why 3 nodes are not enough, But 4 nodes are
+# Slide 6 — Why 3 nodes are not enough, But 4 nodes are
 
 With three nodes, one Byzantine node can create conflicting views that correct nodes cannot distinguish.
 
@@ -78,7 +78,7 @@ Therefore, tolerating one Byzantine fault requires at least four nodes, which is
 
 ---
 
-# Slide 10 — What I Understand Now
+# Slide 7 — What I Understand Now
 
 At this point, I understand that Byzantine faults are fundamentally stronger than crash faults.
 
@@ -94,7 +94,7 @@ They exchange proposals, require enough matching messages, and try to preserve s
 
 ---
 
-# Slide 12 — Next Steps
+# Slide 8 — Next Steps
 
 My next step is to read *Practical Byzantine Fault Tolerance*.
 
@@ -108,7 +108,7 @@ Finally, I will compare PBFT with Paxos, Raft, and HotStuff to clarify the diffe
 
 ---
 
-# Slide 13 — Takeaway
+# Slide 9 — Takeaway
 
 To conclude, Byzantine Fault Tolerance is about creating a consistent shared decision even when some nodes provide conflicting information.
 
