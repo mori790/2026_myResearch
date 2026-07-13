@@ -10,15 +10,16 @@ This presentation is therefore not a detailed paper summary. Instead, I will foc
 
 ---
 
-# Slide 2 — Why I Studied This Topic
+# Slide 2 — What I Studied This Week
 
-I am currently studying PBFT, but I realized that simply memorizing the protocol steps was not enough.
+This week, I studied the theoretical background of Byzantine Fault Tolerance.
 
-I wanted to understand why PBFT needs (3f+1) replicas, why Byzantine faults are more difficult than crash faults, and why replicas need to exchange messages with each other.
+I reviewed the difference between crash faults and Byzantine faults, and I read *The Byzantine Generals Problem*.
 
-For this reason, I read *The Byzantine Generals Problem* as theoretical background.
+I learned why three nodes cannot tolerate one Byzantine fault and understood the intuition behind the (3f+1) requirement.
 
-My main goal was to understand the design principles behind Byzantine Fault Tolerance.
+This gave me a stronger foundation for studying PBFT.
+
 
 ---
 
