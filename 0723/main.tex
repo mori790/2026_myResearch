@@ -1,0 +1,143 @@
+\documentclass{beamer}
+
+\usetheme{Madrid}
+
+\title{Reading Report:\\Can AI Agents Agree?}
+\subtitle{Comparison with PBFT}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+\titlepage
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Research Motivation}
+
+\textbf{Question}
+
+\vspace{0.3cm}
+
+Can LLM agents reliably reach consensus like distributed systems?
+
+\vspace{0.4cm}
+
+\textbf{Focus of this report}
+
+\begin{itemize}
+    \item Compare \textbf{PBFT} and \textbf{Can AI Agents Agree?}
+    \item Identify assumptions that no longer hold
+    \item Explore possible research directions
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{PBFT vs. LLM Agent Consensus}
+
+\small
+
+\begin{tabular}{p{4cm}p{3cm}p{4cm}}
+\hline
+ & PBFT & Can AI Agents Agree? \\
+\hline
+Node & Deterministic process & LLM Agent \\
+Execution & Fixed protocol & Natural language reasoning \\
+Failure Model & Byzantine node & Byzantine + reasoning errors \\
+Output & Identical value & Probabilistic answer \\
+Consensus Target & State / value & Answer agreement \\
+\hline
+\end{tabular}
+
+\vspace{0.5cm}
+
+\textbf{Key Difference}
+
+PBFT assumes correct nodes always execute the protocol faithfully,
+while LLM agents may misunderstand the protocol itself.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Where PBFT Assumptions Break}
+
+PBFT assumes:
+
+\begin{itemize}
+    \item Correct nodes always follow the protocol.
+    \item Messages are interpreted correctly.
+    \item State transitions are deterministic.
+\end{itemize}
+
+\vspace{0.4cm}
+
+LLM agents introduce new uncertainties:
+
+\begin{itemize}
+    \item Hallucination
+    \item Prompt misunderstanding
+    \item Context forgetting
+    \item Non-deterministic reasoning
+\end{itemize}
+
+\vspace{0.4cm}
+
+These behaviors are not covered by the classical Byzantine fault model.
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Possible Research Direction}
+
+Current paper:
+
+\[
+Consensus \rightarrow Answer
+\]
+
+\vspace{0.5cm}
+
+Possible direction:
+
+\[
+Consensus \rightarrow Workflow\ State
+\]
+
+Examples:
+
+\begin{itemize}
+    \item Is the research stage complete?
+    \item Can the coding stage safely begin?
+    \item Is the review trustworthy?
+\end{itemize}
+
+\vspace{0.4cm}
+
+Idea:
+
+\textbf{Workflow Consensus under Semantic Byzantine Faults}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Takeaways}
+
+\begin{itemize}
+    \item PBFT and LLM agents have fundamentally different assumptions.
+    \item Correct execution can no longer be assumed for LLM agents.
+    \item Existing work studies answer consensus.
+    \item Workflow consensus remains largely unexplored.
+    \item Next step:
+    \begin{itemize}
+        \item Read the system model carefully.
+        \item Analyze the failure assumptions.
+        \item Compare with PBFT formally.
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\end{document}
