@@ -2,9 +2,9 @@
 
 \usetheme{Madrid}
 
-\title{Reading Report:\\Can AI Agents Agree?}
-\subtitle{Comparison with PBFT}
-\author{Your Name}
+\title{Research Progress}
+\subtitle{What I learn from "Can AI Agents Agree?"}
+\author{Chiharu Tomimori}
 \date{\today}
 
 \begin{document}
@@ -21,7 +21,7 @@
 
 \vspace{0.3cm}
 
-Can LLM agents reliably reach consensus like distributed systems?
+Can AI-agents reliably reach consensus like distributed systems?
 
 \vspace{0.4cm}
 
@@ -36,7 +36,7 @@ Can LLM agents reliably reach consensus like distributed systems?
 \end{frame}
 
 %------------------------------------------------
-\begin{frame}{PBFT vs. LLM Agent Consensus}
+\begin{frame}{PBFT vs. AI-Agent Consensus}
 
 \small
 
@@ -44,7 +44,7 @@ Can LLM agents reliably reach consensus like distributed systems?
 \hline
  & PBFT & Can AI Agents Agree? \\
 \hline
-Node & Deterministic process & LLM Agent \\
+Node & Deterministic process & AI-Agent \\
 Execution & Fixed protocol & Natural language reasoning \\
 Failure Model & Byzantine node & Byzantine + reasoning errors \\
 Output & Identical value & Probabilistic answer \\
@@ -57,7 +57,7 @@ Consensus Target & State / value & Answer agreement \\
 \textbf{Key Difference}
 
 PBFT assumes correct nodes always execute the protocol faithfully,
-while LLM agents may misunderstand the protocol itself.
+while AI-agents may misunderstand the protocol itself.
 
 \end{frame}
 
@@ -74,7 +74,7 @@ PBFT assumes:
 
 \vspace{0.4cm}
 
-LLM agents introduce new uncertainties:
+AI-agents introduce new uncertainties:
 
 \begin{itemize}
     \item Hallucination
@@ -90,35 +90,25 @@ These behaviors are not covered by the classical Byzantine fault model.
 \end{frame}
 
 %------------------------------------------------
-\begin{frame}{Possible Research Direction}
+\begin{frame}{Updated Research Direction}
 
-Current paper:
-
-\[
-Consensus \rightarrow Answer
-\]
-
-\vspace{0.5cm}
-
-Possible direction:
-
-\[
-Consensus \rightarrow Workflow\ State
-\]
-
-Examples:
+\textbf{What I learned from this paper}
 
 \begin{itemize}
-    \item Is the research stage complete?
-    \item Can the coding stage safely begin?
-    \item Is the review trustworthy?
+    \item AI-agents are probabilistic protocol executors
+    \item Even honest agents may fail to follow consensus protocols
+    \item Evaluating AI-agent distributed systems is difficult
 \end{itemize}
 
 \vspace{0.4cm}
 
-Idea:
+\textbf{Current decision}
 
-\textbf{Workflow Consensus under Semantic Byzantine Faults}
+\begin{itemize}
+    \item Pause the AI-agent research direction
+    \item Shift my focus to Kubernetes-based distributed systems
+    \item Explore concrete research topics in the next step
+\end{itemize}
 
 \end{frame}
 
@@ -126,8 +116,8 @@ Idea:
 \begin{frame}{Takeaways}
 
 \begin{itemize}
-    \item PBFT and LLM agents have fundamentally different assumptions.
-    \item Correct execution can no longer be assumed for LLM agents.
+    \item PBFT and AI-agents have fundamentally different assumptions.
+    \item Correct execution can no longer be assumed for AI-agents.
     \item Existing work studies answer consensus.
     \item Workflow consensus remains largely unexplored.
     \item Next step:

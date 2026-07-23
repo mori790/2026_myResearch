@@ -40,7 +40,7 @@ This makes Byzantine faults much harder to handle.
 
 # Slide 4 — The Core Problem I Understood
 
-The central problem is that correct nodes may observe different local views of the system.
+The central problem is that correct nodes may observe conflict values.
 
 As I mentioned, the faulty node sends value X to Node B and value Y to Node C.
 
