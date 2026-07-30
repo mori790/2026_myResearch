@@ -77,18 +77,6 @@ A failure in etcd or in control-plane communication may interrupt this process.
 
 This diagram shows the flow of creating a Deployment.
 
-First, the user sends a Deployment creation request through kubectl.
-
-The API server receives and validates the request.
-
-The requested desired state is then stored in etcd.
-
-The Deployment Controller and ReplicaSet Controller observe the new state and create the required Pods.
-
-The scheduler then selects worker nodes for the new Pods.
-
-Finally, kubelets on those worker nodes start the containers.
-
 The important idea is that Kubernetes stores a desired state rather than executing only a one-time command.
 
 For example, when the desired number of replicas is three, Kubernetes continuously tries to maintain three Pods.
@@ -117,7 +105,17 @@ The purpose of this limited scope is to identify which failure behaviors have an
 
 ---
 
-## Slide 7: Related Work Positioning — KmMR
+## Slide 7: Reference Paper
+
+The main related paper I use is this work by Diouf, Elbiaze, and Jaafar.
+
+It studies Byzantine fault tolerance in multi-master Kubernetes clusters.
+
+This paper gives me the starting point for understanding how BFT can be connected to Kubernetes control planes.
+
+---
+
+## Slide 8: Related Work Positioning — KmMR
 
 The most important related work I found is KmMR.
 
@@ -141,7 +139,7 @@ The results should help me identify whether PBFT, HotStuff, or another mechanism
 
 ---
 
-## Slide 8: Planned Fault Scenarios
+## Slide 9: Planned Fault Scenarios
 
 I currently plan to evaluate five scenarios.
 
@@ -171,7 +169,7 @@ However, I will describe it as a Byzantine-like or selective communication failu
 
 ---
 
-## Slide 9: Evaluation Metrics
+## Slide 10: Evaluation Metrics
 
 Following the example set by the paper, we will evaluate it as follows:
 
@@ -183,7 +181,7 @@ On the other hand, I focuses on more concreate effect from users perspective.
 
 ---
 
-## Slide 10: Five-Week Plan
+## Slide 11: Five-Week Plan
 
 This slide shows my five-week research schedule.
 
@@ -205,7 +203,7 @@ The main progress this week was defining a realistic scope and understanding how
 
 ---
 
-## Slide 11: Takeaways
+## Slide 12: Takeaways
 
 To conclude, I learned that Kubernetes is a desired-state distributed control system.
 
