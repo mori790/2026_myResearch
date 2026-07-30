@@ -1,11 +1,6 @@
 # Weekly Research Progress — Speaker Script
 
 ## Slide 1: Title
-
-Hello everyone.
-
-Today, I will present my weekly research progress.
-
 My current research direction is Byzantine fault tolerance in Kubernetes control planes.
 
 This week, I mainly worked on narrowing the scope of my poster project, understanding the basic Kubernetes control-plane architecture, and investigating related work.
@@ -19,8 +14,6 @@ My current research focus is Kubernetes from a distributed systems perspective.
 My short-term goal is to prepare a poster presentation in five weeks.
 
 For this poster, I will focus on understanding how different control-plane failures affect Kubernetes.
-
-My long-term goal is to investigate whether Byzantine fault-tolerance mechanisms, such as PBFT or HotStuff, can improve Kubernetes control-plane reliability.
 
 The main research question is:
 
@@ -130,6 +123,8 @@ The most important related work I found is KmMR.
 
 KmMR studies Byzantine fault tolerance in multi-master Kubernetes clusters.
 
+This paper's main conclusion is that you can handle not only a crash failure but also Byzantine failure by changing kubernetes' replication method from Raft to BFT SMaRt.
+
 It integrates BFT-SMaRt into Kubernetes and proposes a system that can tolerate Byzantine failures.
 
 KmMR focuses on building and evaluating a BFT-based solution.
@@ -178,31 +173,13 @@ However, I will describe it as a Byzantine-like or selective communication failu
 
 ## Slide 9: Evaluation Metrics
 
-I will use five main evaluation metrics.
+Following the example set by the paper, we will evaluate it as follows:
 
-The first metric is success rate.
+This evaluation metrics are slightly difference from original paper.
 
-This measures whether Kubernetes operations complete successfully.
+Original paper focuses on the difference between two protocol Raft and BFT-SMaRt.
 
-The second metric is latency.
-
-This measures how long an API operation takes.
-
-The third metric is convergence time.
-
-This measures how long it takes for the actual cluster state to reach the desired state.
-
-For example, after scaling a Deployment to five replicas, I will measure how long it takes until all five Pods are ready.
-
-The fourth metric is recovery time.
-
-This measures how long the cluster takes to return to normal operation after a failure.
-
-The fifth metric is failure detection.
-
-I will investigate whether Kubernetes or etcd notices the abnormal condition.
-
-This is especially important when the system has a problem but still appears healthy.
+On the other hand, I focuses on more concreate effect from users perspective.
 
 ---
 

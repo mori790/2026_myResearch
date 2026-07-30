@@ -10,9 +10,9 @@
 \usepackage{multirow}
 \usepackage{amsmath}
 
-\title{Weekly Research Progress}
+\title{Research Progress}
 \subtitle{Toward Byzantine Fault Tolerance in Kubernetes Control Planes}
-\author{Your Name}
+\author{Chiharu Tomimori}
 \date{\today}
 
 \begin{document}
@@ -46,7 +46,7 @@ How do crash failures and selective communication failures differently affect Ku
 
 \draw[->, thick] (k8s) -- (cp);
 \draw[->, thick] (cp) -- (poster);
-\draw[->, thick] (cp) -- (future);
+\draw[->, thick] (poster) -- (future);
 
 \node[below=0.15cm of poster, align=center, font=\scriptsize] {Failure\\characterization};
 \node[below=0.15cm of future, align=center, font=\scriptsize] {PBFT / HotStuff\\Verifiable logs};
