@@ -6,426 +6,397 @@
 
 \usepackage{amsmath}
 \usepackage{booktabs}
-\usepackage{pgfpages}
 \usepackage{tikz}
+\usepackage{pdfpc}
 
-% Speaker notes:
-% Uncomment for slides and notes side by side.
-% \setbeameroption{show notes on second screen=right}
+% ==========================================
+% Presentation Settings
+% ==========================================
 
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{footline}[frame number]
 
-\title[Research Progress]{Toward Reliable Consensus\\in Multi-Agent LLM Systems}
+\title[Research Progress]{
+Toward Reliable Consensus\\
+in Multi-Agent LLM Systems
+}
+
 \subtitle{Research Direction Exploration}
+
 \author{Your Name}
 \institute{Graduate Research Meeting}
 \date{October 9, 2026}
 
 \begin{document}
 
-%========================================
-% Slide 1
-%========================================
+% ==========================================
+% Slide 1: Title
+% ==========================================
+
 \begin{frame}
 \titlepage
 
-\note{
-Today, I will present my research progress.
-
-My main research area is distributed systems,
-especially fault tolerance and consensus.
-
-Recently, I have been exploring how these
-concepts can be connected to multi-agent
-large language model systems.
-
-Today, I will summarize the papers I have studied,
-the problems I identified, and my current
-research direction.
+\pdfpcnote{
+Today, I will present my recent research progress.\\
+\\
+I'm interested in distributed systems and LLMs,
+so I researched how to integrate them based on academic papers.\\
+\\
+I will introduce the papers I studied,
+the problems I identified,
+and my current research direction.
 }
+
 \end{frame}
 
-%========================================
-% Slide 2
-%========================================
+% ==========================================
+% Slide 2: Motivation
+% ==========================================
+
 \begin{frame}{Research Motivation}
 
 \begin{center}
+
 \Large
-\textbf{Distributed Systems}
-\\[0.3cm]
-$\times$
-\\[0.3cm]
-\textbf{Multi-Agent LLMs}
-\end{center}
+\[
+\boxed{
+\text{Distributed Systems}
+\times
+\text{Multi-Agent LLMs}
+}
+\]
 
-\vspace{0.5cm}
+\vspace{0.6cm}
 
-\begin{block}{Main Question}
-How can multiple LLM agents make
-reliable collective decisions?
+\begin{block}{Research Question}
+How can multiple LLM agents
+make reliable collective decisions?
 \end{block}
 
-\note{
-My motivation is to investigate reliable
-decision-making among multiple LLM agents.
+\end{center}
 
+\pdfpcnote{
+My research direction is the intersection
+of distributed systems and multi-agent LLMs.\\
+\\
 LLM agents can produce different answers
-even when they receive the same question.
-
-This is different from traditional deterministic
-distributed processes.
-
-I want to investigate whether distributed
-systems concepts such as agreement,
-validity, and fault tolerance can help
-improve the reliability of multi-agent systems.
+even when they receive the same question.\\
+\\
+I want to investigate how distributed systems
+concepts such as consensus and fault tolerance
+can improve the reliability of their decisions.
 }
+
 \end{frame}
 
-%========================================
-% Slide 3
-%========================================
+% ==========================================
+% Slide 3: Papers Studied
+% ==========================================
+
 \begin{frame}{Papers Studied}
 
 \begin{enumerate}
-\setlength{\itemsep}{0.45cm}
 
-\item \textbf{The Byzantine Generals Problem}
-\\
+\setlength{\itemsep}{0.5cm}
+
+\item \textbf{The Byzantine Generals Problem}\\
 {\small Lamport et al., 1982}
 
-\item \textbf{Tight Bound on Mobile Byzantine Agreement}
-\\
+\item \textbf{Tight Bound on Mobile Byzantine Agreement}\\
 {\small Bonnet et al., DISC 2014}
 
-\item \textbf{Robust Multi-Agent LLMs under Byzantine Faults}
-\\
+\item \textbf{Robust Multi-Agent LLMs under Byzantine Faults}\\
 {\small Recent work under investigation}
 
 \end{enumerate}
 
-\note{
-First, I studied The Byzantine Generals Problem
-by Lamport and his coauthors.
-
-This paper introduces fundamental agreement
-and validity requirements under Byzantine faults.
-
-Second, I studied Tight Bound on Mobile Byzantine
-Agreement by Bonnet, Defago, and their coauthors.
-
-This paper considers malicious agents that
-move between processes.
-
-Third, I started investigating recent work
-on Byzantine robustness in multi-agent LLM systems.
-
-The main purpose is to understand the difference
-between classical consensus guarantees
-and empirical improvements in LLM reliability.
+\pdfpcnote{
+First, I studied the Byzantine Generals Problem
+by Lamport and his coauthors.\\
+\\
+Next, I studied Mobile Byzantine Agreement
+by Bonnet, Defago, and their coauthors.\\
+\\
+I also started investigating recent research
+on Byzantine robustness in multi-agent LLMs.\\
+\\
+These papers helped me identify an important
+difference between agreement and answer correctness.
 }
+
 \end{frame}
 
-%========================================
-% Slide 4
-%========================================
+% ==========================================
+% Slide 4: Byzantine Agreement
+% ==========================================
+
 \begin{frame}{Classical Byzantine Agreement}
 
 \begin{center}
+
 \Large
+
 \[
 \boxed{\text{Agreement}}
-\qquad
+\]
+
+\[
 \boxed{\text{Validity}}
-\qquad
+\]
+
+\[
 \boxed{\text{Termination}}
 \]
+
 \end{center}
 
-\vspace{0.6cm}
-
-\begin{itemize}
-\setlength{\itemsep}{0.3cm}
-\item Agreement: Same decision
-\item Validity: Decision respects initial values
-\item Termination: Eventually decide
-\end{itemize}
-
-\note{
-In classical Byzantine agreement,
-three properties are important.
-
-Agreement means that correct processes
-must not decide different values.
-
-Validity connects the decision to
-the initial values.
-
-Termination means that correct processes
-eventually decide.
-
-The exact validity condition depends
-on the agreement problem.
-
-For example, in Bonnet's paper,
-if all initially correct processes propose
-the same value, the decided value must
-be that value.
-
-However, validity does not necessarily
-mean that the value is factually correct.
-
-This distinction becomes important
-when considering LLM-generated answers.
+\pdfpcnote{
+Classical Byzantine agreement has three
+important properties.\\
+\\
+Agreement means correct processes
+must decide the same value.\\
+\\
+Validity means the decision must satisfy
+a condition related to the proposed values.\\
+\\
+Termination means correct processes
+eventually make a decision.\\
+\\
+However, validity does not necessarily mean
+that the decided value is factually correct.
 }
+
 \end{frame}
 
-%========================================
-% Slide 5
-%========================================
+% ==========================================
+% Slide 5: Mobile Byzantine Agreement
+% ==========================================
+
 \begin{frame}{Mobile Byzantine Agreement}
 
 \begin{center}
+
 \begin{tikzpicture}[
-node distance=1.8cm,
 every node/.style={
-draw, rounded corners,
-minimum width=1.65cm,
-minimum height=0.8cm,
+draw,
+rounded corners,
+minimum width=2cm,
+minimum height=0.9cm,
 align=center
 }
 ]
 
 \node (a) at (0,0) {Faulty};
-\node (b) at (3,0) {Cured};
-\node (c) at (6,0) {Correct};
+\node (b) at (3.5,0) {Cured};
+\node (c) at (7,0) {Correct};
 
 \draw[->,thick] (a) -- (b);
 \draw[->,thick] (b) -- (c);
 
 \end{tikzpicture}
-\end{center}
 
-\vspace{0.6cm}
+\vspace{0.7cm}
 
-\begin{center}
 \Large
+
 \[
 \boxed{n \geq 5t+1}
 \]
+
 \end{center}
 
+\vspace{0.2cm}
+
 \begin{itemize}
-\item Mobile faults
+\item Mobile Byzantine faults
 \item Corrupted internal states
 \item Agreement maintenance
 \end{itemize}
 
-\note{
-Bonnet and his coauthors studied mobile
-Byzantine agreement.
-
-Unlike classical Byzantine faults,
-malicious agents can move between processes.
-
-When a malicious agent leaves a process,
-the process becomes cured.
-
-A cured process executes the correct algorithm,
-but its internal state may still be corrupted.
-
-The paper proves that at least five t plus one
-processes are required under its model.
-
-Another important contribution is the distinction
-between reaching agreement and maintaining
-agreement.
-
-Even after agreement has been achieved,
-a malicious agent may move and corrupt
-a process's stored decision.
-
-Therefore, the protocol must continuously
-maintain agreement.
+\pdfpcnote{
+Bonnet and his coauthors studied
+mobile Byzantine agreement.\\
+\\
+In their model, malicious agents
+can move between processes.\\
+\\
+When an agent leaves a process,
+the process becomes cured.\\
+\\
+A cured process follows the correct algorithm,
+but its internal state may still be corrupted.\\
+\\
+They proved that at least five t plus one
+processes are required.\\
+\\
+Their algorithm also maintains agreement
+even when faults continue to move.
 }
+
 \end{frame}
 
-%========================================
-% Slide 6
-%========================================
+% ==========================================
+% Slide 6: LLM Challenge
+% ==========================================
+
 \begin{frame}{A Challenge in Multi-Agent LLMs}
 
 \begin{center}
+
 \Large
+
 \[
-\underbrace{[A,A,A,B,B]}_{\text{LLM proposals}}
+[A,A,A,B,B]
 \]
 
 \vspace{0.4cm}
 
 \[
 \text{Majority}=A
-\qquad
+\]
+
+\[
 \text{Correct Answer}=B
 \]
-\end{center}
 
-\vspace{0.5cm}
+\vspace{0.4cm}
 
 \begin{alertblock}{Key Observation}
 Agreement does not imply answer correctness.
 \end{alertblock}
 
-\note{
-This is the main problem I identified
-when considering consensus among LLM agents.
+\end{center}
 
-Suppose five LLM agents generate answers.
-
-Three agents propose A,
-while two agents propose B.
-
-A majority vote would select A.
-
-However, suppose the correct answer is B.
-
-All agents could agree on A,
-but the final answer would still be incorrect.
-
-This means that classical agreement
-and factual correctness are different properties.
-
-Furthermore, a correct LLM process
-may produce an incorrect answer
-without violating its communication protocol.
-
-Therefore, I think we should distinguish
-LLM output uncertainty from Byzantine
-protocol deviations.
+\pdfpcnote{
+LLM agents may produce different answers
+even when they are functioning normally.\\
+\\
+For example, three agents may propose A,
+while two agents propose B.\\
+\\
+A majority vote would select A.\\
+\\
+However, if B is actually correct,
+the agents could agree on the wrong answer.\\
+\\
+Therefore, agreement alone is not enough
+to guarantee reliable LLM decisions.
 }
+
 \end{frame}
 
-%========================================
-% Slide 7
-%========================================
+% ==========================================
+% Slide 7: Research Direction
+% ==========================================
+
 \begin{frame}{Current Research Direction}
 
 \begin{center}
 
 \Large
+
 \textbf{LLM Proposals}
 
-\vspace{0.15cm}
+\vspace{0.2cm}
+
 $\downarrow$
 
-\vspace{0.15cm}
+\vspace{0.2cm}
+
 \textbf{Deterministic Verification}
 
-\vspace{0.15cm}
+\vspace{0.2cm}
+
 $\downarrow$
 
-\vspace{0.15cm}
+\vspace{0.2cm}
+
 \textbf{Fault-Tolerant Agreement}
 
-\vspace{0.15cm}
+\vspace{0.2cm}
+
 $\downarrow$
 
-\vspace{0.15cm}
+\vspace{0.2cm}
+
+\[
 \boxed{\text{Verified Decision}}
+\]
 
 \end{center}
 
-\note{
+\pdfpcnote{
 My current idea is to separate
-LLM reasoning from distributed agreement.
-
+LLM reasoning from distributed agreement.\\
+\\
 First, multiple LLM agents generate
-candidate solutions.
-
-Second, the candidates are checked
-using a deterministic verifier.
-
-For example, we could use executable tests,
-formal constraints, or proof checking.
-
-Third, distributed processes agree
-on a candidate that passes verification.
-
-A digital signature can authenticate
-the sender and protect message integrity,
-but it cannot prove that an answer is correct.
-
-Therefore, verifiable evidence is required.
-
-This is still a research proposal,
-not a new protocol or an established result.
-
-There is already research on validated
-Byzantine agreement, so I need to identify
-what new problem is introduced by
-LLM-generated proposals.
+candidate solutions.\\
+\\
+Next, a deterministic verifier checks
+whether the candidates satisfy
+specific correctness conditions.\\
+\\
+Finally, distributed processes agree
+on a verified candidate.\\
+\\
+This is still a research idea,
+and I need to investigate how it differs
+from existing validated Byzantine agreement.
 }
+
 \end{frame}
 
-%========================================
-% Slide 8
-%========================================
+% ==========================================
+% Slide 8: Next Steps
+% ==========================================
+
 \begin{frame}{Open Questions and Next Steps}
 
 \textbf{Open Questions}
 
 \begin{itemize}
-\setlength{\itemsep}{0.2cm}
+\setlength{\itemsep}{0.25cm}
 \item How should validity be defined?
 \item How can verification cost be reduced?
-\item What guarantees remain under faults?
+\item How can safety be guaranteed under faults?
 \end{itemize}
 
-\vspace{0.5cm}
+\vspace{0.6cm}
 
 \textbf{Next Steps}
 
 \begin{itemize}
 \item Study validated Byzantine agreement
 \item Select a verifiable task
-\item Design a small prototype
+\item Build a small prototype
 \end{itemize}
 
-\note{
-My next step is to investigate
-validated Byzantine agreement
-and related work on verifiable decisions.
-
-I want to focus on tasks where correctness
-can be checked mechanically.
-
+\pdfpcnote{
+My next step is to study
+validated Byzantine agreement.\\
+\\
+I also want to identify a task
+where correctness can be checked mechanically.\\
+\\
 Possible applications include
-software security and automated incident response.
-
-However, I do not want to introduce LLMs
-into systems where deterministic automation
-is already sufficient.
-
-The main research question is whether
-we can reduce verification costs while
-ensuring that correct processes agree
-on a candidate satisfying explicit
-verification conditions.
-
-I will first study existing protocols
-and then build a small prototype
-to evaluate feasibility.
-
-At this stage, the novelty of the idea
-has not yet been established.
+software security and automated incident response.\\
+\\
+My goal is to investigate whether
+verification costs can be reduced
+while maintaining agreement and safety
+under faults.\\
+\\
+I will start with a small prototype
+and compare it with existing approaches.
 }
+
 \end{frame}
 
-%========================================
-% References
-%========================================
+% ==========================================
+% Slide 9: References
+% ==========================================
+
 \begin{frame}{References}
 
 \footnotesize
@@ -438,8 +409,8 @@ L. Lamport, R. Shostak, and M. Pease.
 \newblock ACM TOPLAS, 1982.
 
 \bibitem{bonnet}
-F. Bonnet, X. D\'efago, T. D. Nguyen,
-and M. Potop-Butucaru.
+F. Bonnet, X. D\'efago,
+T. D. Nguyen, and M. Potop-Butucaru.
 \newblock Tight Bound on Mobile Byzantine Agreement.
 \newblock DISC, 2014.
 
@@ -450,16 +421,10 @@ M. Castro and B. Liskov.
 
 \end{thebibliography}
 
-\note{
-These are the foundational papers
-supporting my current research exploration.
-
-The first two are the main papers
-I have studied so far.
-
-Practical Byzantine Fault Tolerance
-is included as additional background.
-
+\pdfpcnote{
+These are the main references
+for my current research exploration.\\
+\\
 Thank you for listening.
 }
 
