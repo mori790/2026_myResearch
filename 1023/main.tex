@@ -1,0 +1,378 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+
+% Self-contained Beamer source: standard TeX Live / Overleaf packages only.
+\usetheme{Madrid}
+\usecolortheme{default}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{array}
+\usepackage{hyperref}
+
+% ===== Presenter notes: single source of truth in THIS .tex file =====
+% Each \speaker{...} entry is a concise 3-5 sentence English script.
+% pdflatex automatically writes a matching <jobname>.pdfpc for pdfpc.
+% Neither the notes nor the raw speaker script appear on the audience PDF.
+% No pdfpcnotes.sty installation or shell-escape is required.
+% Notes should use ordinary ASCII prose (escape LaTeX special characters).
+% Avoid double quotes or backslashes in notes, as these need JSON escaping.
+\setbeameroption{hide notes}
+% Define literal JSON braces with catcode 12 for safe TeX writes.
+\begingroup
+  \catcode`\[=1 \catcode`\]=2
+  \catcode`\{=12 \catcode`\}=12
+  \gdef\jsonopen[{]
+  \gdef\jsonclose[}]
+\endgroup
+\newwrite\pdfpcnotesout
+\newcounter{pdfpcnotenum}
+\AtBeginDocument{%
+  \immediate\openout\pdfpcnotesout=\jobname.pdfpc
+  \immediate\write\pdfpcnotesout{\jsonopen"pdfpcFormat":2,"disableMarkdown":true,"noteFontSize":18,"pages":[}%
+}
+\newcommand{\speaker}[1]{%
+  \note{#1}% Native Beamer note (hidden on audience PDF).
+  \ifnum\value{pdfpcnotenum}>0
+    \immediate\write\pdfpcnotesout{,}%
+  \fi
+  \immediate\write\pdfpcnotesout{\jsonopen"idx":\arabic{pdfpcnotenum},"label":"\number\numexpr\value{pdfpcnotenum}+1\relax","note":"\detokenize{#1}"\jsonclose}%
+  \stepcounter{pdfpcnotenum}%
+}
+\AtEndDocument{%
+  \immediate\write\pdfpcnotesout{]\jsonclose}%
+  \immediate\closeout\pdfpcnotesout
+}
+
+\definecolor{navy}{HTML}{18334F}
+\definecolor{teal}{HTML}{087F8C}
+\definecolor{pale}{HTML}{EAF1F6}
+\definecolor{paleteal}{HTML}{E6F4F3}
+\definecolor{muted}{HTML}{5B6E7E}
+\definecolor{softred}{HTML}{FAEEEE}
+\definecolor{redink}{HTML}{AE514B}
+\definecolor{linegray}{HTML}{CBD6DE}
+
+\setbeamercolor{structure}{fg=navy}
+\setbeamercolor{frametitle}{fg=white,bg=navy}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{normal text}{fg=navy,bg=white}
+\setbeamercolor{block title}{fg=white,bg=navy}
+\setbeamercolor{block body}{fg=navy,bg=pale}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{title}{series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox{%
+   \begin{beamercolorbox}[wd=.84\paperwidth,ht=2.8ex,dp=1.1ex,leftskip=1.2em]{normal text}%
+     {\color{muted}\scriptsize Weekly Research Progress \hspace{0.8em} | \hspace{0.8em} October 23, 2026}%
+   \end{beamercolorbox}%
+   \begin{beamercolorbox}[wd=.16\paperwidth,ht=2.8ex,dp=1.1ex,rightskip=1.3em plus1fil]{normal text}%
+     \hfill{\color{muted}\scriptsize\insertframenumber\,/\,\inserttotalframenumber}%
+   \end{beamercolorbox}%
+  }%
+}
+\setbeamersize{text margin left=10mm,text margin right=10mm}
+
+\tikzset{
+  panel/.style={draw=linegray,very thick,rounded corners=3pt,fill=pale,align=center,inner sep=7pt,text=navy},
+  neutral/.style={draw=linegray,thick,rounded corners=3pt,fill=white,align=center,inner sep=7pt,text=navy},
+  accent/.style={draw=teal,very thick,rounded corners=3pt,fill=paleteal,align=center,inner sep=7pt,text=navy},
+  warning/.style={draw=redink,thick,rounded corners=3pt,fill=softred,align=center,inner sep=7pt,text=navy},
+  flowarr/.style={-{Stealth[length=2.6mm]},thick,draw=muted},
+}
+\newcommand{\smallsource}[1]{\vspace{0.6ex}{\color{muted}\fontsize{7}{8}\selectfont #1}}
+\newcommand{\sectionlead}[1]{{\color{teal}\bfseries #1}}
+
+\title[Weekly Progress]{From LLM Cooperation to\\Coding-Agent Coordination}
+\subtitle{Weekly Progress: Last Week, Feedback, and This Week}
+\author{Your Name}
+\institute{Graduate Research Meeting}
+\date{October 23, 2026}
+
+
+\begin{document}
+
+% 1 Title
+\begin{frame}[plain]
+  \titlepage
+  \vspace{-2mm}
+  \begin{center}{\color{teal}\rule{0.62\textwidth}{1.1pt}}\end{center}
+  \speaker{Today, I will briefly review what I did last week and the feedback from our October sixteenth meeting. Then I will explain how I narrowed my focus this week. Finally, I will present two possible research questions and my next steps.}
+\end{frame}
+
+% 2 Last week
+\begin{frame}{Last Week: Exploring LLM Agent Cooperation}
+\vspace{0.1cm}
+\begin{center}
+\begin{tikzpicture}
+\node[panel,text width=10.8cm,minimum height=12mm] (topic) at (0,1.65)
+  {\textbf{Broad interest:} Cooperation among distributed LLM agents};
+\node[neutral,text width=4.8cm,minimum height=14mm] (swarm) at (-3.0,0.08)
+  {\textbf{SwarmBench}\\[-2pt]{\scriptsize Local information and collective tasks}};
+\node[neutral,text width=4.8cm,minimum height=14mm] (bolzano) at (3.0,0.08)
+  {\textbf{Bolzano}\\[-2pt]{\scriptsize Long-running exploration and verification}};
+\draw[flowarr] (topic.south) -- ++(0,-0.24) -| (swarm.north);
+\draw[flowarr] (topic.south) -- ++(0,-0.24) -| (bolzano.north);
+\node[warning,text width=10.8cm,minimum height=12mm] at (0,-1.65)
+  {\textbf{Remaining issue:} The task and research question were still broad.};
+\end{tikzpicture}
+\end{center}
+\smallsource{Background literature: SwarmBench (2025, preprint); Bolzano (2026, preprint).}
+\speaker{Last week, I explored cooperation among LLM agents. SwarmBench studies collective tasks with limited local information, while Bolzano provides examples of long-running problem solving and verification. These papers gave me useful directions, but my target application and research question were still too broad.}
+\end{frame}
+
+% 3 Feedback
+\begin{frame}{October 16 Meeting: Feedback}
+\vspace{0.15cm}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.32\textwidth}
+\begin{beamercolorbox}[wd=\linewidth,sep=8pt,rounded=true]{block body}
+\textbf{Clear story}\\[6pt]
+{\small Explain context early.}\\[5pt]
+{\small Avoid unnecessary details.}
+\end{beamercolorbox}
+\end{column}
+\begin{column}{0.32\textwidth}
+\begin{beamercolorbox}[wd=\linewidth,sep=8pt,rounded=true]{block body}
+\textbf{Research evidence}\\[6pt]
+{\small Check related work and benchmarks.}\\[5pt]
+{\small Report time and cost separately.}
+\end{beamercolorbox}
+\end{column}
+\begin{column}{0.32\textwidth}
+\begin{beamercolorbox}[wd=\linewidth,sep=8pt,rounded=true]{block body}
+\textbf{Time constraint}\\[6pt]
+{\small Define RQ and method within two weeks.}\\[5pt]
+{\small Interim talk: Nov 25--26.}
+\end{beamercolorbox}
+\end{column}
+\end{columns}
+\vspace{1.25cm}
+\begin{center}\sectionlead{My response: narrow the task and study evaluation methods.}\end{center}
+\speaker{At the October sixteenth meeting, we received feedback about making presentations clear and focused. For my research, the key next steps are to examine existing benchmarks and define a concrete question. I also need to report time and cost separately and prepare for the November interim presentation.}
+\end{frame}
+
+% 4 This week concrete focus
+\begin{frame}{This Week: Focus on Program Repair}
+\vspace{0.0cm}
+\begin{center}
+\begin{tikzpicture}
+\node[panel,text width=10.7cm,minimum height=10mm] (issue) at (0,2.0)
+  {\textbf{Example GitHub issue:} Login fails after a session refresh};
+\node[neutral,text width=3.1cm,minimum height=14mm] (a) at (-4,0.37)
+  {\textbf{Find the bug}\\[-2pt]{\scriptsize Locate relevant code}};
+\node[neutral,text width=3.1cm,minimum height=14mm] (b) at (0,0.37)
+  {\textbf{Propose fixes}\\[-2pt]{\scriptsize Generate patches}};
+\node[neutral,text width=3.1cm,minimum height=14mm] (c) at (4,0.37)
+  {\textbf{Test fixes}\\[-2pt]{\scriptsize Validate changes}};
+\draw[flowarr] (issue.south) -- ++(0,-0.3) -| (a.north);
+\draw[flowarr] (issue.south) -- (b.north);
+\draw[flowarr] (issue.south) -- ++(0,-0.3) -| (c.north);
+\node[accent,text width=10.7cm,minimum height=9mm] at (0,-1.36)
+  {\textbf{Why this task?} Concrete intermediate results and testable outcomes};
+\end{tikzpicture}
+\end{center}
+\smallsource{Illustrative scenario; no coding-agent prototype or experiments have been completed.}
+\speaker{Based on this feedback, I chose automated program repair as a concrete application. For example, an issue might report that login fails after a session refresh. An agent must find the relevant code, propose a patch, and test it. These intermediate results give us something specific to study and measure.}
+\end{frame}
+
+% 5 Papers reviewed this week
+\begin{frame}{This Week: Three Papers Reviewed}
+\vspace{0.25cm}
+\begin{center}
+\begin{tikzpicture}
+\node[panel,text width=11.0cm,minimum height=12mm] at (0,1.63)
+  {\textbf{Agentless} \hspace{0.6em} {\scriptsize FSE 2025}\\[-2pt]{\small Fixed stages: localize, repair, validate}};
+\node[panel,text width=11.0cm,minimum height=12mm] at (0,0.12)
+  {\textbf{MASAI} \hspace{0.6em} {\scriptsize NeurIPS 2024 Workshop}\\[-2pt]{\small Specialized sub-agents pass intermediate outputs}};
+\node[panel,text width=11.0cm,minimum height=12mm] at (0,-1.39)
+  {\textbf{MetaGPT} \hspace{0.6em} {\scriptsize ICLR 2024}\\[-2pt]{\small Roles, standard procedures, and a shared message pool}};
+\end{tikzpicture}
+\end{center}
+\smallsource{Agentless [1]; MASAI [2]; MetaGPT [3].}
+\speaker{This week, I read three papers. Agentless divides repair into localization, patch generation, and validation. MASAI uses specialized agents for different steps, while MetaGPT organizes software development through roles and shared messages. I focused on how work is divided and how results move between stages or agents.}
+\end{frame}
+
+% 6 Comparison architecture
+\begin{frame}{Finding 1: Different Information Flows}
+\vspace{0.25cm}
+\renewcommand{\arraystretch}{1.9}
+\begin{tabular}{@{}p{2.5cm}p{4.3cm}p{5.3cm}@{}}
+\toprule
+\textbf{System} & \textbf{Coordination} & \textbf{Information flow} \\
+\midrule
+\textbf{Agentless} & Fixed workflow & Locate $\rightarrow$ Repair $\rightarrow$ Test \\
+\textbf{MASAI} & Specialized roles & Outputs passed to dependent agents \\
+\textbf{MetaGPT} & Shared message pool & Publish and subscribe to artifacts \\
+\bottomrule
+\end{tabular}
+\vspace{0.95cm}
+\begin{center}\sectionlead{They coordinate differently, but solve different tasks.}\end{center}
+\smallsource{Summary of architecture descriptions in [1--3]; not a performance ranking.}
+\speaker{The main difference is the information flow. Agentless follows a fixed pipeline, and MASAI passes outputs between specialized sub-agents. MetaGPT uses a shared message pool, so agents can publish and receive relevant artifacts. These systems do not all solve the same task, so this is an architectural comparison, not a performance ranking.}
+\end{frame}
+
+% 7 Evaluation findings
+\begin{frame}{Finding 2: How Existing Work Is Evaluated}
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{@{}p{2.5cm}p{4.1cm}p{5.5cm}@{}}
+\toprule
+\textbf{Paper} & \textbf{Benchmark} & \textbf{Measurements} \\
+\midrule
+Agentless & SWE-bench Lite & Resolved issues, API cost \\
+MASAI & SWE-bench Lite & Resolved issues, localization, cost \\
+MetaGPT & HumanEval / MBPP / SoftwareDev & Pass rate, execution, time, tokens \\
+\bottomrule
+\end{tabular}
+\vspace{0.9cm}
+\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
+\textbf{Lesson:} Compare methods on the same task and budget.\par
+{\small Measure success, time, and cost separately.}
+\end{beamercolorbox}
+\smallsource{Benchmarks and metrics reported in [1--3].}
+\speaker{I also checked how these papers evaluate their systems. Agentless and MASAI use SWE-bench Lite to measure real-world issue resolution. MetaGPT mainly evaluates code generation and broader software development. For my own experiment, I should use the same tasks and resource budget, and report success, time, and cost as separate metrics.}
+\end{frame}
+
+% 8 Concrete scenario
+\begin{frame}{A Concrete Coordination Question}
+\vspace{0.15cm}
+\begin{center}
+\begin{tikzpicture}
+\node[neutral,text width=4.8cm,minimum height=14mm] (ag1) at (-3.15,1.60)
+  {\textbf{Agent A}\\[-2pt]{\scriptsize Applies a fix to code version v1}};
+\node[neutral,text width=4.8cm,minimum height=14mm] (ag2) at (3.15,1.60)
+  {\textbf{Agent B}\\[-2pt]{\scriptsize Still works with version v1}};
+\node[accent,text width=4.8cm,minimum height=12mm] (v2) at (-3.15,-0.04)
+  {\textbf{Repository becomes v2}};
+\node[warning,text width=4.8cm,minimum height=12mm] (old) at (3.15,-0.04)
+  {\textbf{B's findings may be stale}};
+\draw[flowarr] (ag1.south)--(v2.north);
+\draw[flowarr] (ag2.south)--(old.north);
+\draw[flowarr,dashed] (v2.east)--node[above,font=\scriptsize,fill=white]{update}(old.west);
+\node[panel,text width=11.0cm,minimum height=10mm] at (0,-1.50)
+  {\textbf{When should results be shared or revalidated?}};
+\end{tikzpicture}
+\end{center}
+\smallsource{Illustrative hypothesis; not an issue experimentally demonstrated by Agentless, MASAI, or MetaGPT.}
+\speaker{Here is a possible coordination problem. Agent A modifies version one of a repository, creating version two. Meanwhile, Agent B may still rely on findings from version one. I want to investigate when such findings should be shared or checked again. This is my example, not a failure demonstrated by the papers.}
+\end{frame}
+
+% 9 Research questions
+\begin{frame}{Candidate Research Questions}
+\vspace{0.3cm}
+\begin{beamercolorbox}[wd=\linewidth,sep=11pt,rounded=true]{block body}
+\textbf{RQ1 --- Sharing timing}\\[5pt]
+{\small When should parallel coding agents share intermediate results?}
+\end{beamercolorbox}
+\vspace{0.7cm}
+\begin{beamercolorbox}[wd=\linewidth,sep=11pt,rounded=true]{block body}
+\textbf{RQ2 --- Stale information}\\[5pt]
+{\small How does outdated information affect collaborative repair?}
+\end{beamercolorbox}
+\vspace{0.65cm}
+\begin{center}
+{\color{muted}\small Verification before sharing is a related question.}\par
+\vspace{0.25cm}
+\sectionlead{The final RQ has not been selected yet.}
+\end{center}
+\speaker{From this example, I have two candidate research questions. The first asks when coding agents should share intermediate results. The second asks how outdated information affects collaborative repair. Verification before sharing may also matter, but I have not selected the final research question yet.}
+\end{frame}
+
+% 10 Proposed method
+\begin{frame}{Next: Initial Evaluation Design}
+\vspace{0.1cm}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.49\textwidth}
+\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
+\textbf{Task}\par\vspace{6pt}
+{\small SWE-bench Lite (small pilot subset)}
+\end{beamercolorbox}
+\vspace{0.5cm}
+\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
+\textbf{Sharing policies}\par\vspace{6pt}
+{\small None / Periodic / Version-aware}
+\end{beamercolorbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
+\textbf{Measurements}\par\vspace{6pt}
+{\small Repair success / Time / Tokens / Messages}
+\end{beamercolorbox}
+\vspace{0.5cm}
+\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
+\textbf{Controls}\par\vspace{6pt}
+{\small Same model and total resource budget}
+\end{beamercolorbox}
+\end{column}
+\end{columns}
+\vspace{0.8cm}
+\begin{center}\sectionlead{Planned experiment --- not implemented yet.}\end{center}
+\smallsource{SWE-bench: ICLR 2024 [4]. Comparison policies and metrics are proposals.}
+\speaker{As an initial plan, I would use a small subset of SWE-bench Lite. I would compare no sharing, periodic sharing, and a version-aware policy. I would measure repair success, elapsed time, token use, and messages. The model and total resource budget should be controlled. This experiment is still a proposal, not a completed result.}
+\end{frame}
+
+% 11 Roadmap
+\begin{frame}{Milestones: Two Weeks to Define the Research}
+\vspace{0.25cm}
+\renewcommand{\arraystretch}{1.85}
+\begin{tabular}{@{}p{2.6cm}p{9.8cm}@{}}
+\toprule
+\textbf{When} & \textbf{Deliverable} \\
+\midrule
+Oct 16 & Meeting feedback received \\
+Oct 17--23 & Narrowed task; reviewed three papers \\
+\textbf{By Oct 30} & \textbf{Select RQ, related work, method, and benchmark} \\
+Nov 25--26 & Interim research presentation \\
+\bottomrule
+\end{tabular}
+\vspace{0.9cm}
+\begin{center}
+\begin{tikzpicture}
+\draw[line width=2pt,muted] (-5.4,0)--(5.4,0);
+\foreach \x/\lab in {-5.1/{Feedback},-1.65/{Review},1.65/{RQ + Method},5.1/{Interim}} {
+ \fill[teal] (\x,0) circle (3pt);
+ \node[above=7pt,font=\scriptsize,text=navy] at (\x,0){\lab};
+}
+\end{tikzpicture}
+\end{center}
+\speaker{The schedule is important because we have limited time. I received the feedback on October sixteenth, and this week I narrowed the task and reviewed three papers. By October thirtieth, I aim to choose the research question, method, related work, and benchmark. This will prepare me for the interim presentation on November twenty-fifth or twenty-sixth.}
+\end{frame}
+
+% 12 Summary
+\begin{frame}{Summary and Questions for Discussion}
+\vspace{0.15cm}
+\begin{itemize}\setlength{\itemsep}{0.7em}
+ \item \textbf{Last week:} Broad investigation of LLM cooperation
+ \item \textbf{Feedback:} Need a specific RQ, evidence, and timeline
+ \item \textbf{This week:} Program repair and three related papers
+ \item \textbf{Next:} Select a coordination question and testbed
+\end{itemize}
+\vspace{0.65cm}
+\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
+\textbf{Question:} Should I focus on sharing timing or stale information?\par\vspace{3pt}
+{\small Is program repair a suitable first evaluation task?}
+\end{beamercolorbox}
+\speaker{To summarize, I moved from broad LLM cooperation toward a concrete program-repair setting. The three papers helped me compare workflow design, agent roles, and information sharing. My next step is to define a specific coordination problem and evaluation plan. I would appreciate feedback on which research question is stronger and whether program repair is a suitable testbed.}
+\end{frame}
+
+% 13 References (backup)
+\begin{frame}{References (Backup)}
+\fontsize{8.0}{9.6}\selectfont
+\begin{enumerate}\setlength{\itemsep}{0.65em}
+ \item C. S. Xia, Y. Deng, S. Dunn, and L. Zhang.\par
+   \textit{Demystifying LLM-based Software Engineering Agents.} ACM FSE, 2025.
+ \item N. Wadhwa et al.\par
+   \textit{MASAI: Modular Architecture for Software-Engineering AI Agents.} NeurIPS Workshop, 2024.
+ \item S. Hong et al.\par
+   \textit{MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework.} ICLR, 2024.
+ \item C. E. Jimenez et al.\par
+   \textit{SWE-bench: Can Language Models Resolve Real-World GitHub Issues?} ICLR, 2024.
+ \item \textit{Benchmarking LLMs' Swarm Intelligence (SwarmBench).} arXiv:2505.04364, 2025. (Preprint)
+ \item \textit{Bolzano: Case Studies in LLM-Assisted Mathematical Research.} arXiv:2604.16989, 2026. (Preprint)
+\end{enumerate}
+\speaker{These are the papers behind this review. Agentless and MetaGPT appeared at peer-reviewed conferences, while MASAI was presented at a workshop. SwarmBench and Bolzano are listed as preprints here. I will continue checking published versions and related research before making novelty claims.}
+\end{frame}
+\end{document}

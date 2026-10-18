@@ -1,0 +1,27 @@
+{"pdfpcFormat":2,"disableMarkdown":true,"noteFontSize":18,"pages":[
+{"idx":0,"label":"1","note":"Today, I will briefly review what I did last week and the feedback from our October sixteenth meeting. Then I will explain how I narrowed my focus this week. Finally, I will present two possible research questions and my next steps."}
+,
+{"idx":1,"label":"2","note":"Last week, I explored cooperation among LLM agents. SwarmBench studies collective tasks with limited local information, while Bolzano provides examples of long-running problem solving and verification. These papers gave me useful directions, but my target application and research question were still too broad."}
+,
+{"idx":2,"label":"3","note":"At the October sixteenth meeting, we received feedback about making presentations clear and focused. For my research, the key next steps are to examine existing benchmarks and define a concrete question. I also need to report time and cost separately and prepare for the November interim presentation."}
+,
+{"idx":3,"label":"4","note":"Based on this feedback, I chose automated program repair as a concrete application. For example, an issue might report that login fails after a session refresh. An agent must find the relevant code, propose a patch, and test it. These intermediate results give us something specific to study and measure."}
+,
+{"idx":4,"label":"5","note":"This week, I read three papers. Agentless divides repair into localization, patch generation, and validation. MASAI uses specialized agents for different steps, while MetaGPT organizes software development through roles and shared messages. I focused on how work is divided and how results move between stages or agents."}
+,
+{"idx":5,"label":"6","note":"The main difference is the information flow. Agentless follows a fixed pipeline, and MASAI passes outputs between specialized sub-agents. MetaGPT uses a shared message pool, so agents can publish and receive relevant artifacts. These systems do not all solve the same task, so this is an architectural comparison, not a performance ranking."}
+,
+{"idx":6,"label":"7","note":"I also checked how these papers evaluate their systems. Agentless and MASAI use SWE-bench Lite to measure real-world issue resolution. MetaGPT mainly evaluates code generation and broader software development. For my own experiment, I should use the same tasks and resource budget, and report success, time, and cost as separate metrics."}
+,
+{"idx":7,"label":"8","note":"Here is a possible coordination problem. Agent A modifies version one of a repository, creating version two. Meanwhile, Agent B may still rely on findings from version one. I want to investigate when such findings should be shared or checked again. This is my example, not a failure demonstrated by the papers."}
+,
+{"idx":8,"label":"9","note":"From this example, I have two candidate research questions. The first asks when coding agents should share intermediate results. The second asks how outdated information affects collaborative repair. Verification before sharing may also matter, but I have not selected the final research question yet."}
+,
+{"idx":9,"label":"10","note":"As an initial plan, I would use a small subset of SWE-bench Lite. I would compare no sharing, periodic sharing, and a version-aware policy. I would measure repair success, elapsed time, token use, and messages. The model and total resource budget should be controlled. This experiment is still a proposal, not a completed result."}
+,
+{"idx":10,"label":"11","note":"The schedule is important because we have limited time. I received the feedback on October sixteenth, and this week I narrowed the task and reviewed three papers. By October thirtieth, I aim to choose the research question, method, related work, and benchmark. This will prepare me for the interim presentation on November twenty-fifth or twenty-sixth."}
+,
+{"idx":11,"label":"12","note":"To summarize, I moved from broad LLM cooperation toward a concrete program-repair setting. The three papers helped me compare workflow design, agent roles, and information sharing. My next step is to define a specific coordination problem and evaluation plan. I would appreciate feedback on which research question is stronger and whether program repair is a suitable testbed."}
+,
+{"idx":12,"label":"13","note":"These are the papers behind this review. Agentless and MetaGPT appeared at peer-reviewed conferences, while MASAI was presented at a workshop. SwarmBench and Bolzano are listed as preprints here. I will continue checking published versions and related research before making novelty claims."}
+]}
