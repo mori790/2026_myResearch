@@ -1,378 +1,420 @@
-\documentclass[aspectratio=169,10pt]{beamer}
-
-% Self-contained Beamer source: standard TeX Live / Overleaf packages only.
+\documentclass[aspectratio=169,11pt]{beamer}
 \usetheme{Madrid}
 \usecolortheme{default}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{booktabs}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,calc}
-\usepackage{array}
-\usepackage{hyperref}
-
-% ===== Presenter notes: single source of truth in THIS .tex file =====
-% Each \speaker{...} entry is a concise 3-5 sentence English script.
-% pdflatex automatically writes a matching <jobname>.pdfpc for pdfpc.
-% Neither the notes nor the raw speaker script appear on the audience PDF.
-% No pdfpcnotes.sty installation or shell-escape is required.
-% Notes should use ordinary ASCII prose (escape LaTeX special characters).
-% Avoid double quotes or backslashes in notes, as these need JSON escaping.
-\setbeameroption{hide notes}
-% Define literal JSON braces with catcode 12 for safe TeX writes.
-\begingroup
-  \catcode`\[=1 \catcode`\]=2
-  \catcode`\{=12 \catcode`\}=12
-  \gdef\jsonopen[{]
-  \gdef\jsonclose[}]
-\endgroup
-\newwrite\pdfpcnotesout
-\newcounter{pdfpcnotenum}
-\AtBeginDocument{%
-  \immediate\openout\pdfpcnotesout=\jobname.pdfpc
-  \immediate\write\pdfpcnotesout{\jsonopen"pdfpcFormat":2,"disableMarkdown":true,"noteFontSize":18,"pages":[}%
-}
-\newcommand{\speaker}[1]{%
-  \note{#1}% Native Beamer note (hidden on audience PDF).
-  \ifnum\value{pdfpcnotenum}>0
-    \immediate\write\pdfpcnotesout{,}%
-  \fi
-  \immediate\write\pdfpcnotesout{\jsonopen"idx":\arabic{pdfpcnotenum},"label":"\number\numexpr\value{pdfpcnotenum}+1\relax","note":"\detokenize{#1}"\jsonclose}%
-  \stepcounter{pdfpcnotenum}%
-}
-\AtEndDocument{%
-  \immediate\write\pdfpcnotesout{]\jsonclose}%
-  \immediate\closeout\pdfpcnotesout
-}
-
-\definecolor{navy}{HTML}{18334F}
-\definecolor{teal}{HTML}{087F8C}
-\definecolor{pale}{HTML}{EAF1F6}
-\definecolor{paleteal}{HTML}{E6F4F3}
-\definecolor{muted}{HTML}{5B6E7E}
-\definecolor{softred}{HTML}{FAEEEE}
-\definecolor{redink}{HTML}{AE514B}
-\definecolor{linegray}{HTML}{CBD6DE}
-
-\setbeamercolor{structure}{fg=navy}
-\setbeamercolor{frametitle}{fg=white,bg=navy}
-\setbeamercolor{title}{fg=white}
-\setbeamercolor{normal text}{fg=navy,bg=white}
-\setbeamercolor{block title}{fg=white,bg=navy}
-\setbeamercolor{block body}{fg=navy,bg=pale}
-\setbeamerfont{frametitle}{series=\bfseries,size=\large}
-\setbeamerfont{title}{series=\bfseries}
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{headline}{}
-\setbeamertemplate{footline}{%
-  \leavevmode\hbox{%
-   \begin{beamercolorbox}[wd=.84\paperwidth,ht=2.8ex,dp=1.1ex,leftskip=1.2em]{normal text}%
-     {\color{muted}\scriptsize Weekly Research Progress \hspace{0.8em} | \hspace{0.8em} October 23, 2026}%
-   \end{beamercolorbox}%
-   \begin{beamercolorbox}[wd=.16\paperwidth,ht=2.8ex,dp=1.1ex,rightskip=1.3em plus1fil]{normal text}%
-     \hfill{\color{muted}\scriptsize\insertframenumber\,/\,\inserttotalframenumber}%
-   \end{beamercolorbox}%
-  }%
-}
-\setbeamersize{text margin left=10mm,text margin right=10mm}
+\setbeamertemplate{bibliography item}[text]
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{positioning,arrows.meta}
+
+\title[Where to Enforce Coordination]{Where Should Coordination Be Enforced\\in Multi-Agent Software Engineering?}
+\subtitle{Weekly Research Progress}
+\author{Chiharu Tomimori}
+\institute{Institute of Science Tokyo}
+\date{\today}
+
+% Full citation shown at the bottom of each paper slide
+\newcommand{\papercite}[1]{%
+  \vfill
+  \begin{beamercolorbox}[wd=\textwidth,sep=3pt]{block body}
+    \tiny #1
+  \end{beamercolorbox}}
+
+\newcommand{\yes}{\textcolor{green!50!black}{\checkmark}}
+\newcommand{\no}{\textcolor{red!70!black}{$\times$}}
 
 \tikzset{
-  panel/.style={draw=linegray,very thick,rounded corners=3pt,fill=pale,align=center,inner sep=7pt,text=navy},
-  neutral/.style={draw=linegray,thick,rounded corners=3pt,fill=white,align=center,inner sep=7pt,text=navy},
-  accent/.style={draw=teal,very thick,rounded corners=3pt,fill=paleteal,align=center,inner sep=7pt,text=navy},
-  warning/.style={draw=redink,thick,rounded corners=3pt,fill=softred,align=center,inner sep=7pt,text=navy},
-  flowarr/.style={-{Stealth[length=2.6mm]},thick,draw=muted},
+  box/.style={draw, rounded corners, fill=blue!8, minimum height=0.9cm,
+               text width=2.2cm, align=center, font=\footnotesize},
+  hl/.style={box, fill=orange!20},
+  arr/.style={-{Stealth[length=2mm]}, thick}
 }
-\newcommand{\smallsource}[1]{\vspace{0.6ex}{\color{muted}\fontsize{7}{8}\selectfont #1}}
-\newcommand{\sectionlead}[1]{{\color{teal}\bfseries #1}}
-
-\title[Weekly Progress]{From LLM Cooperation to\\Coding-Agent Coordination}
-\subtitle{Weekly Progress: Last Week, Feedback, and This Week}
-\author{Your Name}
-\institute{Graduate Research Meeting}
-\date{October 23, 2026}
-
 
 \begin{document}
 
-% 1 Title
-\begin{frame}[plain]
+% ---------------------------------------------------------------
+\begin{frame}
   \titlepage
-  \vspace{-2mm}
-  \begin{center}{\color{teal}\rule{0.62\textwidth}{1.1pt}}\end{center}
-  \speaker{Today, I will briefly review what I did last week and the feedback from our October sixteenth meeting. Then I will explain how I narrowed my focus this week. Finally, I will present two possible research questions and my next steps.}
 \end{frame}
 
-% 2 Last week
-\begin{frame}{Last Week: Exploring LLM Agent Cooperation}
-\vspace{0.1cm}
-\begin{center}
-\begin{tikzpicture}
-\node[panel,text width=10.8cm,minimum height=12mm] (topic) at (0,1.65)
-  {\textbf{Broad interest:} Cooperation among distributed LLM agents};
-\node[neutral,text width=4.8cm,minimum height=14mm] (swarm) at (-3.0,0.08)
-  {\textbf{SwarmBench}\\[-2pt]{\scriptsize Local information and collective tasks}};
-\node[neutral,text width=4.8cm,minimum height=14mm] (bolzano) at (3.0,0.08)
-  {\textbf{Bolzano}\\[-2pt]{\scriptsize Long-running exploration and verification}};
-\draw[flowarr] (topic.south) -- ++(0,-0.24) -| (swarm.north);
-\draw[flowarr] (topic.south) -- ++(0,-0.24) -| (bolzano.north);
-\node[warning,text width=10.8cm,minimum height=12mm] at (0,-1.65)
-  {\textbf{Remaining issue:} The task and research question were still broad.};
-\end{tikzpicture}
-\end{center}
-\smallsource{Background literature: SwarmBench (2025, preprint); Bolzano (2026, preprint).}
-\speaker{Last week, I explored cooperation among LLM agents. SwarmBench studies collective tasks with limited local information, while Bolzano provides examples of long-running problem solving and verification. These papers gave me useful directions, but my target application and research question were still too broad.}
+% ---------------------------------------------------------------
+\begin{frame}{This Week at a Glance}
+  \centering
+  \begin{tikzpicture}[node distance=0.45cm]
+    \node[box] (f) {\textbf{1. Feedback}\\metric = success rate};
+    \node[box, right=of f] (s) {\textbf{2. Survey}\\6 related works};
+    \node[box, right=of s] (l) {\textbf{3. Layer view}\\L1--L4};
+    \node[box, right=of l] (k) {\textbf{4. Key paper}\\CoAgent};
+    \node[hl, right=of k] (q) {\textbf{5. Draft RQ}\\where to enforce?};
+    \draw[arr] (f) -- (s);
+    \draw[arr] (s) -- (l);
+    \draw[arr] (l) -- (k);
+    \draw[arr] (k) -- (q);
+  \end{tikzpicture}
+
+  \vspace{1.2em}
+  \small
+  \begin{tabular}{ll}
+    \toprule
+    Done this week & Output \\
+    \midrule
+    Fixed the primary metric & Task success rate (hidden tests pass) \\
+    Surveyed related work & CooperBench, CAID, PASC, NP-Bench, CoAgent, position paper \\
+    Organized the landscape & Four coordination layers (L1--L4) \\
+    Read CoAgent in depth & Strengths, limits, publication status \\
+    Narrowed the question & Same protocol, different layers \\
+    \bottomrule
+  \end{tabular}
 \end{frame}
 
-% 3 Feedback
-\begin{frame}{October 16 Meeting: Feedback}
-\vspace{0.15cm}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.32\textwidth}
-\begin{beamercolorbox}[wd=\linewidth,sep=8pt,rounded=true]{block body}
-\textbf{Clear story}\\[6pt]
-{\small Explain context early.}\\[5pt]
-{\small Avoid unnecessary details.}
-\end{beamercolorbox}
-\end{column}
-\begin{column}{0.32\textwidth}
-\begin{beamercolorbox}[wd=\linewidth,sep=8pt,rounded=true]{block body}
-\textbf{Research evidence}\\[6pt]
-{\small Check related work and benchmarks.}\\[5pt]
-{\small Report time and cost separately.}
-\end{beamercolorbox}
-\end{column}
-\begin{column}{0.32\textwidth}
-\begin{beamercolorbox}[wd=\linewidth,sep=8pt,rounded=true]{block body}
-\textbf{Time constraint}\\[6pt]
-{\small Define RQ and method within two weeks.}\\[5pt]
-{\small Interim talk: Nov 25--26.}
-\end{beamercolorbox}
-\end{column}
-\end{columns}
-\vspace{1.25cm}
-\begin{center}\sectionlead{My response: narrow the task and study evaluation methods.}\end{center}
-\speaker{At the October sixteenth meeting, we received feedback about making presentations clear and focused. For my research, the key next steps are to examine existing benchmarks and define a concrete question. I also need to report time and cost separately and prepare for the November interim presentation.}
+% ---------------------------------------------------------------
+\section{Problem}
+\begin{frame}{Problem Setting}
+  \centering
+  \begin{tikzpicture}[node distance=0.6cm and 1.4cm, every node/.style={font=\small}]
+    \node[draw, rounded corners, fill=blue!8] (repo) {Shared repository};
+    \node[draw, rounded corners, fill=orange!15, above left=0.5cm and 1.2cm of repo] (a1) {Agent 1: feature A};
+    \node[draw, rounded corners, fill=orange!15, above right=0.5cm and 1.2cm of repo] (a2) {Agent 2: feature B};
+    \node[draw, rounded corners, fill=green!12, below=0.6cm of repo] (t) {Merged code passes tests A \textbf{and} B?};
+    \draw[arr] (a1) -- (repo);
+    \draw[arr] (a2) -- (repo);
+    \draw[arr] (repo) -- (t);
+  \end{tikzpicture}
+
+  \vspace{1em}
+  \begin{itemize}
+    \item Agents = \textbf{concurrent writers} on shared state
+    \item Success = merged result passes \textbf{all} tests
+  \end{itemize}
 \end{frame}
 
-% 4 This week concrete focus
-\begin{frame}{This Week: Focus on Program Repair}
-\vspace{0.0cm}
-\begin{center}
-\begin{tikzpicture}
-\node[panel,text width=10.7cm,minimum height=10mm] (issue) at (0,2.0)
-  {\textbf{Example GitHub issue:} Login fails after a session refresh};
-\node[neutral,text width=3.1cm,minimum height=14mm] (a) at (-4,0.37)
-  {\textbf{Find the bug}\\[-2pt]{\scriptsize Locate relevant code}};
-\node[neutral,text width=3.1cm,minimum height=14mm] (b) at (0,0.37)
-  {\textbf{Propose fixes}\\[-2pt]{\scriptsize Generate patches}};
-\node[neutral,text width=3.1cm,minimum height=14mm] (c) at (4,0.37)
-  {\textbf{Test fixes}\\[-2pt]{\scriptsize Validate changes}};
-\draw[flowarr] (issue.south) -- ++(0,-0.3) -| (a.north);
-\draw[flowarr] (issue.south) -- (b.north);
-\draw[flowarr] (issue.south) -- ++(0,-0.3) -| (c.north);
-\node[accent,text width=10.7cm,minimum height=9mm] at (0,-1.36)
-  {\textbf{Why this task?} Concrete intermediate results and testable outcomes};
-\end{tikzpicture}
-\end{center}
-\smallsource{Illustrative scenario; no coding-agent prototype or experiments have been completed.}
-\speaker{Based on this feedback, I chose automated program repair as a concrete application. For example, an issue might report that login fails after a session refresh. An agent must find the relevant code, propose a patch, and test it. These intermediate results give us something specific to study and measure.}
+% ---------------------------------------------------------------
+\section{Related Work}
+\begin{frame}{CooperBench: Can Two Agents Work as a Team?}
+  \centering
+  \begin{tikzpicture}[every node/.style={font=\footnotesize}]
+    % solo
+    \node[font=\small\bfseries] at (-3.6,2.3) {Solo};
+    \node[draw, rounded corners, fill=orange!15, text width=2.4cm, align=center] (s) at (-3.6,1.2) {1 agent\\features A + B};
+    \node[draw, rounded corners, fill=green!12, text width=2.4cm, align=center] (st) at (-3.6,-0.6) {tests A and B};
+    \draw[arr] (s) -- (st);
+    % coop
+    \node[font=\small\bfseries] at (2.6,2.3) {Coop};
+    \node[draw, rounded corners, fill=orange!15, text width=2.0cm, align=center] (c1) at (0.7,1.2) {Agent 1\\sees only A};
+    \node[draw, rounded corners, fill=orange!15, text width=2.0cm, align=center] (c2) at (4.5,1.2) {Agent 2\\sees only B};
+    \draw[<->, dashed, thick] (c1) -- node[above=3pt, font=\scriptsize, fill=white, inner sep=1pt]{msg} (c2);
+    \node[draw, rounded corners, fill=blue!8] (m) at (2.6,0.0) {merge patch 1 + patch 2};
+    \node[draw, rounded corners, fill=green!12, text width=2.4cm, align=center] (ct) at (2.6,-1.1) {tests A and B};
+    \draw[arr] (c1) -- (m); \draw[arr] (c2) -- (m); \draw[arr] (m) -- (ct);
+    \draw[gray, dashed] (-1.4,2.5) -- (-1.4,-1.5);
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \small
+  \begin{tabular}{ll}
+    Tasks & 652 feature pairs, 12 repos, 4 languages \\
+    Built to conflict & features touch the same code \\
+    Coordination & prompt + messaging tool only (no enforcement) \\
+  \end{tabular}
+  \papercite{A. Khatua, H. Zhu, P. Tran, A. Prabhudesai, F. Sadrieh, J. K. Lieberwirth, X. Yu, Y. Fu, M. J. Ryan, J. Pei, D. Yang. ``CooperBench: Why Coding Agents Cannot be Your Teammates Yet.'' \textit{Conference on Language Modeling (COLM)}, 2026. arXiv:2601.13295.}
 \end{frame}
 
-% 5 Papers reviewed this week
-\begin{frame}{This Week: Three Papers Reviewed}
-\vspace{0.25cm}
-\begin{center}
-\begin{tikzpicture}
-\node[panel,text width=11.0cm,minimum height=12mm] at (0,1.63)
-  {\textbf{Agentless} \hspace{0.6em} {\scriptsize FSE 2025}\\[-2pt]{\small Fixed stages: localize, repair, validate}};
-\node[panel,text width=11.0cm,minimum height=12mm] at (0,0.12)
-  {\textbf{MASAI} \hspace{0.6em} {\scriptsize NeurIPS 2024 Workshop}\\[-2pt]{\small Specialized sub-agents pass intermediate outputs}};
-\node[panel,text width=11.0cm,minimum height=12mm] at (0,-1.39)
-  {\textbf{MetaGPT} \hspace{0.6em} {\scriptsize ICLR 2024}\\[-2pt]{\small Roles, standard procedures, and a shared message pool}};
-\end{tikzpicture}
-\end{center}
-\smallsource{Agentless [1]; MASAI [2]; MetaGPT [3].}
-\speaker{This week, I read three papers. Agentless divides repair into localization, patch generation, and validation. MASAI uses specialized agents for different steps, while MetaGPT organizes software development through roles and shared messages. I focused on how work is divided and how results move between stages or agents.}
+% ---------------------------------------------------------------
+\begin{frame}{CooperBench: Results}
+  \centering\small Two agents: $\sim$25\% success (GPT-5, Claude Sonnet 4.5), about \textbf{half of solo}. Messaging reduces merge conflicts but not failures.\\[4pt]
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \centering\footnotesize\textbf{Failure symptoms (\% of failures)}\\[2pt]
+      \begin{tikzpicture}
+        \begin{axis}[xbar, width=6.6cm, height=4.2cm,
+            xmin=0, xmax=40, bar width=7pt,
+            symbolic y coords={Unverifiable claims,Unresponsiveness,Repetition,Divergent architecture,Work overlap},
+            ytick=data, yticklabel style={font=\scriptsize},
+            xticklabel style={font=\scriptsize},
+            nodes near coords, nodes near coords style={font=\scriptsize},
+            enlarge y limits=0.15]
+          \addplot[fill=orange!60] coordinates {(4.3,Unverifiable claims) (8.7,Unresponsiveness) (14.7,Repetition) (29.7,Divergent architecture) (33.2,Work overlap)};
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering\footnotesize\textbf{Success vs.\ number of agents (46 tasks)}\\[2pt]
+      \begin{tikzpicture}
+        \begin{axis}[ybar, width=5.6cm, height=4.2cm,
+            ymin=0, ymax=80, bar width=14pt,
+            symbolic x coords={2,3,4}, xtick=data,
+            xlabel={agents}, ylabel={success (\%)},
+            label style={font=\scriptsize}, ticklabel style={font=\scriptsize},
+            nodes near coords, nodes near coords style={font=\scriptsize}]
+          \addplot[fill=blue!50] coordinates {(2,68.6) (3,46.5) (4,30.0)};
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \papercite{A. Khatua, H. Zhu, P. Tran, A. Prabhudesai, F. Sadrieh, J. K. Lieberwirth, X. Yu, Y. Fu, M. J. Ryan, J. Pei, D. Yang. ``CooperBench: Why Coding Agents Cannot be Your Teammates Yet.'' \textit{Conference on Language Modeling (COLM)}, 2026. arXiv:2601.13295.}
 \end{frame}
 
-% 6 Comparison architecture
-\begin{frame}{Finding 1: Different Information Flows}
-\vspace{0.25cm}
-\renewcommand{\arraystretch}{1.9}
-\begin{tabular}{@{}p{2.5cm}p{4.3cm}p{5.3cm}@{}}
-\toprule
-\textbf{System} & \textbf{Coordination} & \textbf{Information flow} \\
-\midrule
-\textbf{Agentless} & Fixed workflow & Locate $\rightarrow$ Repair $\rightarrow$ Test \\
-\textbf{MASAI} & Specialized roles & Outputs passed to dependent agents \\
-\textbf{MetaGPT} & Shared message pool & Publish and subscribe to artifacts \\
-\bottomrule
-\end{tabular}
-\vspace{0.95cm}
-\begin{center}\sectionlead{They coordinate differently, but solve different tasks.}\end{center}
-\smallsource{Summary of architecture descriptions in [1--3]; not a performance ranking.}
-\speaker{The main difference is the information flow. Agentless follows a fixed pipeline, and MASAI passes outputs between specialized sub-agents. MetaGPT uses a shared message pool, so agents can publish and receive relevant artifacts. These systems do not all solve the same task, so this is an architectural comparison, not a performance ranking.}
+% ---------------------------------------------------------------
+\begin{frame}{Closest Work: CAID --- Branch and Merge}
+  \centering
+  \begin{tikzpicture}[every node/.style={font=\footnotesize}]
+    \node[draw, rounded corners, fill=blue!10, text width=3.2cm, align=center] (mgr) at (0,2.2) {\textbf{Manager}\\dependency graph,\\assigns tasks};
+    \node[draw, rounded corners, fill=orange!15, text width=2.2cm, align=center] (e1) at (-3.6,0.4) {Engineer 1\\own worktree};
+    \node[draw, rounded corners, fill=orange!15, text width=2.2cm, align=center] (e2) at (0,0.4) {Engineer 2\\own worktree};
+    \node[draw, rounded corners, fill=orange!15, text width=2.2cm, align=center] (e3) at (3.6,0.4) {Engineer 3\\own worktree};
+    \node[draw, rounded corners, fill=green!12, text width=4.6cm, align=center] (main) at (0,-1.4) {\textbf{main branch}: git merge + tests};
+    \foreach \e in {e1,e2,e3} {\draw[arr] (mgr) -- (\e); \draw[arr] (\e) -- node[right, font=\scriptsize]{} (main);}
+    \node[font=\scriptsize, right] at (2.5,-0.6) {commit};
+    \node[font=\scriptsize, right] at (2.0,1.45) {JSON task};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \small Parallel edits never touch each other's files directly; conflicts surface at merge time.
+  \papercite{J. Geng, G. Neubig. ``Effective Strategies for Asynchronous Software Engineering Agents.'' arXiv:2603.21489, 2026 (preprint).}
 \end{frame}
 
-% 7 Evaluation findings
-\begin{frame}{Finding 2: How Existing Work Is Evaluated}
-\renewcommand{\arraystretch}{1.8}
-\begin{tabular}{@{}p{2.5cm}p{4.1cm}p{5.5cm}@{}}
-\toprule
-\textbf{Paper} & \textbf{Benchmark} & \textbf{Measurements} \\
-\midrule
-Agentless & SWE-bench Lite & Resolved issues, API cost \\
-MASAI & SWE-bench Lite & Resolved issues, localization, cost \\
-MetaGPT & HumanEval / MBPP / SoftwareDev & Pass rate, execution, time, tokens \\
-\bottomrule
-\end{tabular}
-\vspace{0.9cm}
-\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
-\textbf{Lesson:} Compare methods on the same task and budget.\par
-{\small Measure success, time, and cost separately.}
-\end{beamercolorbox}
-\smallsource{Benchmarks and metrics reported in [1--3].}
-\speaker{I also checked how these papers evaluate their systems. Agentless and MASAI use SWE-bench Lite to measure real-world issue resolution. MetaGPT mainly evaluates code generation and broader software development. For my own experiment, I should use the same tasks and resource budget, and report success, time, and cost as separate metrics.}
+% ---------------------------------------------------------------
+\begin{frame}{CAID: Results}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \centering\footnotesize\textbf{Main result: higher score, higher cost}\\[4pt]
+      \small
+      \begin{tabular}{llcc}
+        \toprule
+        & & Single & CAID \\
+        \midrule
+        Commit0-Lite & score & 53.1 & \textbf{59.1} \\
+                     & cost (\$) & 1.9 & 8.1 \\
+                     & time (s) & 693 & 1583 \\
+        \midrule
+        PaperBench & score & 57.2 & \textbf{63.3} \\
+                   & cost (\$) & 3.3 & 6.5 \\
+                   & time (s) & 1804 & 2080 \\
+        \bottomrule
+      \end{tabular}\\[2pt]
+      {\scriptsize Claude Sonnet 4.5; 4 engineers (Commit0), 2 (PaperBench)}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering\footnotesize\textbf{Ablation: how to isolate}\\[2pt]
+      \begin{tikzpicture}
+        \begin{axis}[ybar, width=6.4cm, height=4.2cm,
+            ymin=40, ymax=70, bar width=9pt,
+            symbolic x coords={Commit0-Lite,PaperBench}, xtick=data,
+            ylabel={score (\%)}, label style={font=\scriptsize},
+            ticklabel style={font=\scriptsize},
+            enlarge x limits=0.45,
+            legend style={font=\tiny, at={(0.5,-0.22)}, anchor=north, legend columns=3},
+            nodes near coords, nodes near coords style={font=\tiny}]
+          \addplot[fill=gray!40] coordinates {(Commit0-Lite,53.1) (PaperBench,57.2)};
+          \addplot[fill=orange!50] coordinates {(Commit0-Lite,56.1) (PaperBench,55.5)};
+          \addplot[fill=blue!60] coordinates {(Commit0-Lite,59.1) (PaperBench,63.3)};
+          \legend{Single, By instruction, By worktree}
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \vspace{0.2em}
+  \footnotesize Limitation: with 8 engineers, two got the same file $\Rightarrow$ 92.1\% $\to$ 44.3\% on \texttt{simpy}.
+  \papercite{J. Geng, G. Neubig. ``Effective Strategies for Asynchronous Software Engineering Agents.'' arXiv:2603.21489, 2026 (preprint).}
 \end{frame}
 
-% 8 Concrete scenario
-\begin{frame}{A Concrete Coordination Question}
-\vspace{0.15cm}
-\begin{center}
-\begin{tikzpicture}
-\node[neutral,text width=4.8cm,minimum height=14mm] (ag1) at (-3.15,1.60)
-  {\textbf{Agent A}\\[-2pt]{\scriptsize Applies a fix to code version v1}};
-\node[neutral,text width=4.8cm,minimum height=14mm] (ag2) at (3.15,1.60)
-  {\textbf{Agent B}\\[-2pt]{\scriptsize Still works with version v1}};
-\node[accent,text width=4.8cm,minimum height=12mm] (v2) at (-3.15,-0.04)
-  {\textbf{Repository becomes v2}};
-\node[warning,text width=4.8cm,minimum height=12mm] (old) at (3.15,-0.04)
-  {\textbf{B's findings may be stale}};
-\draw[flowarr] (ag1.south)--(v2.north);
-\draw[flowarr] (ag2.south)--(old.north);
-\draw[flowarr,dashed] (v2.east)--node[above,font=\scriptsize,fill=white]{update}(old.west);
-\node[panel,text width=11.0cm,minimum height=10mm] at (0,-1.50)
-  {\textbf{When should results be shared or revalidated?}};
-\end{tikzpicture}
-\end{center}
-\smallsource{Illustrative hypothesis; not an issue experimentally demonstrated by Agentless, MASAI, or MetaGPT.}
-\speaker{Here is a possible coordination problem. Agent A modifies version one of a repository, creating version two. Meanwhile, Agent B may still rely on findings from version one. I want to investigate when such findings should be shared or checked again. This is my example, not a failure demonstrated by the papers.}
+% ---------------------------------------------------------------
+\begin{frame}{Existing Work Coordinates at Different Layers}
+  \small
+  \begin{tabularx}{\textwidth}{l X l c}
+    \toprule
+    Layer & Mechanism & Example & Writes enforced? \\
+    \midrule
+    L1 Instruction & ``Do not touch others' files'' in the prompt & CooperBench coop [1] & \no \\
+    L2 Advisory tool & Claim / scope tools the agent may ignore & NP-Bench [2] & \no \\
+    L3 Runtime & Middleware blocks or reorders actions & CoAgent [3] & \yes \\
+    L4 Workspace / VCS & Separate worktrees, merge with tests & CAID [4] & \yes \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{0.6em}
+
+  \footnotesize NP-Bench lists enforced scopes as future work. PASC [5] (shared tree) sees co-edits rise from 16.8\% to 53.0\% (2 $\to$ 5 agents).
+  \papercite{[1] Khatua et al., COLM 2026, arXiv:2601.13295. \;
+  [2] S. Muku, ``Verifying Coordination in Parallel Coding Agents: NP-Bench and a Scheduling Planner,'' arXiv:2610.07261, 2026. \;
+  [3] H. Lyu et al., arXiv:2606.15376, 2026. \;
+  [4] J. Geng, G. Neubig, arXiv:2603.21489, 2026. \;
+  [5] H. \"Ozayt\"urk, F. Buzluca, ``Coordinating Agents on a Shared Git Workspace: An Empirical Study of Action-Space Observation for Agentic Software Engineering,'' \textit{ESEM 2026}, LIPIcs vol.~394, 18:1--18:20. doi:10.4230/LIPIcs.ESEM.2026.18.}
 \end{frame}
 
-% 9 Research questions
-\begin{frame}{Candidate Research Questions}
-\vspace{0.3cm}
-\begin{beamercolorbox}[wd=\linewidth,sep=11pt,rounded=true]{block body}
-\textbf{RQ1 --- Sharing timing}\\[5pt]
-{\small When should parallel coding agents share intermediate results?}
-\end{beamercolorbox}
-\vspace{0.7cm}
-\begin{beamercolorbox}[wd=\linewidth,sep=11pt,rounded=true]{block body}
-\textbf{RQ2 --- Stale information}\\[5pt]
-{\small How does outdated information affect collaborative repair?}
-\end{beamercolorbox}
-\vspace{0.65cm}
-\begin{center}
-{\color{muted}\small Verification before sharing is a related question.}\par
-\vspace{0.25cm}
-\sectionlead{The final RQ has not been selected yet.}
-\end{center}
-\speaker{From this example, I have two candidate research questions. The first asks when coding agents should share intermediate results. The second asks how outdated information affects collaborative repair. Verification before sharing may also matter, but I have not selected the final research question yet.}
+% ---------------------------------------------------------------
+\section{Key Paper: CoAgent}
+\begin{frame}{Key Paper: CoAgent --- The Runtime Informs, the Agent Repairs}
+  \small\textbf{Problem}: agent B builds a canary on an image agent A is fixing $\Rightarrow$ final state matches \textbf{no serial order}
+  \vspace{0.8em}
+
+  \centering
+  \begin{tikzpicture}[node distance=0.5cm]
+    \node[box, text width=3.2cm] (o) {\textbf{Fix serial order}\\at launch;\\reads follow it};
+    \node[box, text width=3.2cm, right=of o] (w) {\textbf{Write immediately}\\undo + redo with\\inverse if late};
+    \node[hl, text width=3.2cm, right=of w] (n) {\textbf{Notify stale reader}\\agent repairs its plan\\(no abort)};
+    \draw[arr] (o) -- (w);
+    \draw[arr] (w) -- (n);
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \small
+  \begin{tabular}{lll}
+    \toprule
+    & 2PL & OCC \\
+    \midrule
+    Problem with LLM agents & locks held during inference & abort wastes inference \\
+    \bottomrule
+  \end{tabular}
+  \papercite{H. Lyu, D. Zhang, M. Wu, X. Wei, H. Chen. ``CoAgent: Concurrency Control for Multi-Agent Systems.'' arXiv:2606.15376, 2026 (preprint; no peer-reviewed version found as of Oct.\ 2026).}
 \end{frame}
 
-% 10 Proposed method
-\begin{frame}{Next: Initial Evaluation Design}
-\vspace{0.1cm}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.49\textwidth}
-\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
-\textbf{Task}\par\vspace{6pt}
-{\small SWE-bench Lite (small pilot subset)}
-\end{beamercolorbox}
-\vspace{0.5cm}
-\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
-\textbf{Sharing policies}\par\vspace{6pt}
-{\small None / Periodic / Version-aware}
-\end{beamercolorbox}
-\end{column}
-\begin{column}{0.49\textwidth}
-\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
-\textbf{Measurements}\par\vspace{6pt}
-{\small Repair success / Time / Tokens / Messages}
-\end{beamercolorbox}
-\vspace{0.5cm}
-\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
-\textbf{Controls}\par\vspace{6pt}
-{\small Same model and total resource budget}
-\end{beamercolorbox}
-\end{column}
-\end{columns}
-\vspace{0.8cm}
-\begin{center}\sectionlead{Planned experiment --- not implemented yet.}\end{center}
-\smallsource{SWE-bench: ICLR 2024 [4]. Comparison policies and metrics are proposals.}
-\speaker{As an initial plan, I would use a small subset of SWE-bench Lite. I would compare no sharing, periodic sharing, and a version-aware policy. I would measure repair success, elapsed time, token use, and messages. The model and total resource budget should be controlled. This experiment is still a proposal, not a completed result.}
+% ---------------------------------------------------------------
+\begin{frame}{CoAgent: Results and Limitations}
+  \centering\footnotesize\textbf{10 contended workloads, 2 agents (relative to serial execution)}\\[4pt]
+  \small
+  \begin{tabular}{lccl}
+    \toprule
+    Protocol & Speedup & Tokens & Note \\
+    \midrule
+    No coordination & $\sim$1.5$\times$ & -- & only 13\% of trials correct \\
+    2PL & 1.04$\times$ & -- & 0.81 deadlocks / trial \\
+    OCC & 0.93$\times$ & 1.83$\times$ & 0.95 aborts / trial \\
+    \textbf{MTPO (proposed)} & \textbf{1.4$\times$} & \textbf{1.15$\times$} & correctness $\sim$5\% below serial \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.8em}
+  \footnotesize\textbf{Not covered by the evaluation}\\[3pt]
+  \begin{tabular}{ccccc}
+    \toprule
+    Coding / git tasks & Prompt-only baseline & $>$2 agents & $>$1 model & Free-form bash \\
+    \midrule
+    \no & \no & \no & \no & \no \\
+    \bottomrule
+  \end{tabular}
+  \papercite{H. Lyu, D. Zhang, M. Wu, X. Wei, H. Chen. ``CoAgent: Concurrency Control for Multi-Agent Systems.'' arXiv:2606.15376, 2026 (preprint).}
 \end{frame}
 
-% 11 Roadmap
-\begin{frame}{Milestones: Two Weeks to Define the Research}
-\vspace{0.25cm}
-\renewcommand{\arraystretch}{1.85}
-\begin{tabular}{@{}p{2.6cm}p{9.8cm}@{}}
-\toprule
-\textbf{When} & \textbf{Deliverable} \\
-\midrule
-Oct 16 & Meeting feedback received \\
-Oct 17--23 & Narrowed task; reviewed three papers \\
-\textbf{By Oct 30} & \textbf{Select RQ, related work, method, and benchmark} \\
-Nov 25--26 & Interim research presentation \\
-\bottomrule
-\end{tabular}
-\vspace{0.9cm}
-\begin{center}
-\begin{tikzpicture}
-\draw[line width=2pt,muted] (-5.4,0)--(5.4,0);
-\foreach \x/\lab in {-5.1/{Feedback},-1.65/{Review},1.65/{RQ + Method},5.1/{Interim}} {
- \fill[teal] (\x,0) circle (3pt);
- \node[above=7pt,font=\scriptsize,text=navy] at (\x,0){\lab};
-}
-\end{tikzpicture}
-\end{center}
-\speaker{The schedule is important because we have limited time. I received the feedback on October sixteenth, and this week I narrowed the task and reviewed three papers. By October thirtieth, I aim to choose the research question, method, related work, and benchmark. This will prepare me for the interim presentation on November twenty-fifth or twenty-sixth.}
+% ---------------------------------------------------------------
+\section{Research Question}
+\begin{frame}{Gap and Draft Research Question}
+  \small
+  \begin{tabular}{l l c}
+    \toprule
+    Study & What is compared & Same protocol across layers? \\
+    \midrule
+    CoAgent [3] & Protocols inside L3 & \no \\
+    CAID [4] & Isolation: L1 vs.\ L4 & partly \\
+    NP-Bench [2] & Planning vs.\ detection, L2 only & \no \\
+    Position paper [6] & Argument only, no experiments & \no \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{1em}
+  \begin{block}{Research question (draft)}
+    At which layer should a coordination protocol (e.g., scope ownership) be enforced to maximize task success rate?
+  \end{block}
+  \papercite{[2] S. Muku, arXiv:2610.07261, 2026. \; [3] H. Lyu et al., arXiv:2606.15376, 2026. \; [4] J. Geng, G. Neubig, arXiv:2603.21489, 2026. \;
+  [6] X. Yang, L. Li, Z. Ji, T. J. Zhang, W. Jiang. ``Position: Multi-Agent Systems Should Prioritize Concurrency Control.'' \textit{ICML 2026}. arXiv:2608.18092.}
 \end{frame}
 
-% 12 Summary
-\begin{frame}{Summary and Questions for Discussion}
-\vspace{0.15cm}
-\begin{itemize}\setlength{\itemsep}{0.7em}
- \item \textbf{Last week:} Broad investigation of LLM cooperation
- \item \textbf{Feedback:} Need a specific RQ, evidence, and timeline
- \item \textbf{This week:} Program repair and three related papers
- \item \textbf{Next:} Select a coordination question and testbed
-\end{itemize}
-\vspace{0.65cm}
-\begin{beamercolorbox}[wd=\linewidth,sep=9pt,rounded=true]{block body}
-\textbf{Question:} Should I focus on sharing timing or stale information?\par\vspace{3pt}
-{\small Is program repair a suitable first evaluation task?}
-\end{beamercolorbox}
-\speaker{To summarize, I moved from broad LLM cooperation toward a concrete program-repair setting. The three papers helped me compare workflow design, agent roles, and information sharing. My next step is to define a specific coordination problem and evaluation plan. I would appreciate feedback on which research question is stronger and whether program repair is a suitable testbed.}
+% ---------------------------------------------------------------
+\begin{frame}{Same Protocol, Different Layers: An Example}
+  \small\textbf{Protocol (fixed):} ``Agent 1 owns \texttt{a.py}; Agent 2 owns \texttt{b.py}. Edit only what you own.''\\[6pt]
+  \centering
+  \begin{tabularx}{\textwidth}{l X X c}
+    \toprule
+    Layer & How the rule is delivered & Agent 1 tries to edit \texttt{b.py} & Enforced? \\
+    \midrule
+    L1 Instruction & Written in the prompt & Edit succeeds & \no \\
+    L2 Advisory tool & \texttt{claim(b.py)} says ``owned by Agent 2'' & Edit still succeeds & \no \\
+    L3 Runtime & \texttt{b.py} is read-only for Agent 1 & \texttt{Permission denied} & \yes \\
+    L4 Workspace & Own worktree; merge rejects out-of-scope files & Edit kept locally, rejected at merge & \yes~(late) \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.6em}
+  \small Same rule, same owner map, same model and tasks --- only \textbf{who guarantees the rule} changes.
 \end{frame}
 
-% 13 References (backup)
-\begin{frame}{References (Backup)}
-\fontsize{8.0}{9.6}\selectfont
-\begin{enumerate}\setlength{\itemsep}{0.65em}
- \item C. S. Xia, Y. Deng, S. Dunn, and L. Zhang.\par
-   \textit{Demystifying LLM-based Software Engineering Agents.} ACM FSE, 2025.
- \item N. Wadhwa et al.\par
-   \textit{MASAI: Modular Architecture for Software-Engineering AI Agents.} NeurIPS Workshop, 2024.
- \item S. Hong et al.\par
-   \textit{MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework.} ICLR, 2024.
- \item C. E. Jimenez et al.\par
-   \textit{SWE-bench: Can Language Models Resolve Real-World GitHub Issues?} ICLR, 2024.
- \item \textit{Benchmarking LLMs' Swarm Intelligence (SwarmBench).} arXiv:2505.04364, 2025. (Preprint)
- \item \textit{Bolzano: Case Studies in LLM-Assisted Mathematical Research.} arXiv:2604.16989, 2026. (Preprint)
-\end{enumerate}
-\speaker{These are the papers behind this review. Agentless and MetaGPT appeared at peer-reviewed conferences, while MASAI was presented at a workshop. SwarmBench and Bolzano are listed as preprints here. I will continue checking published versions and related research before making novelty claims.}
+% ---------------------------------------------------------------
+\begin{frame}{Planned Experiment: Change Only the Layer}
+  \centering
+  \small
+  \begin{tabular}{lll}
+    \toprule
+    Condition & Layer & Role \\
+    \midrule
+    Solo (1 agent, both features) & -- & reference \\
+    Coop & L1 & existing \\
+    Team mode (advisory claims) & L2 & existing \\
+    \textbf{Enforced scopes (file permissions)} & \textbf{L3} & \textbf{proposed} \\
+    Worktree + merge (CAID-style) & L4 & reference \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{1em}
+  \begin{tabular}{ll}
+    Fixed & protocol, model, tasks, step budget \\
+    Benchmark & CooperBench (gold patches conflict in 76.5\% of pairs) \\
+    Primary metric & success rate (both features' tests pass) \\
+    Secondary & out-of-scope writes, stale-read failures \\
+  \end{tabular}
 \end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Risks}
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{l X}
+    \toprule
+    Risk & Mitigation \\
+    \midrule
+    One agent does all the work (serial collapse) & Report parallelism and ``rescued by one agent'' cases \\
+    Stale reads not fixed by write partitioning & Count stale-read failures separately \\
+    Blocked agents waste budget & Fix the denial message across runs \\
+    Benchmark changed after the paper & Pin one commit of CooperBench \\
+    Overlap with AgentRoom, ATM (2026 preprints) & Read them next week \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Next Week}
+  \begin{enumerate}
+    \item Run a small CooperBench pilot (10 pairs): solo / coop / team
+    \item Classify the failures (write conflict, semantic conflict, stale read, capability)
+    \item Count how often agents write outside their claims in team mode
+    \item Read AgentRoom and ATM to check overlap
+  \end{enumerate}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Coordinating coding agents lose about \textbf{half} of their success
+    \item Existing systems coordinate at \textbf{different layers}
+    \item No study we found compares \textbf{the same protocol across layers}
+  \end{itemize}
+  \vspace{1em}
+  \begin{block}{Takeaway}
+    The question is not \emph{which protocol}, but \emph{where to enforce it}.
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[allowframebreaks]{References}
+  \footnotesize
+  \begin{thebibliography}{9}
+    \bibitem{cooper} A. Khatua, H. Zhu, P. Tran, A. Prabhudesai, F. Sadrieh, J. K. Lieberwirth, X. Yu, Y. Fu, M. J. Ryan, J. Pei, D. Yang. CooperBench: Why Coding Agents Cannot be Your Teammates Yet. \textit{COLM}, 2026. arXiv:2601.13295.
+    \bibitem{np} S. Muku. Verifying Coordination in Parallel Coding Agents: NP-Bench and a Scheduling Planner. arXiv:2610.07261, 2026.
+    \bibitem{coagent} H. Lyu, D. Zhang, M. Wu, X. Wei, H. Chen. CoAgent: Concurrency Control for Multi-Agent Systems. arXiv:2606.15376, 2026.
+    \bibitem{caid} J. Geng, G. Neubig. Effective Strategies for Asynchronous Software Engineering Agents. arXiv:2603.21489, 2026.
+    \bibitem{pasc} H. \"Ozayt\"urk, F. Buzluca. Coordinating Agents on a Shared Git Workspace: An Empirical Study of Action-Space Observation for Agentic Software Engineering. \textit{ESEM}, LIPIcs vol.~394, 18:1--18:20, 2026. doi:10.4230/LIPIcs.ESEM.2026.18.
+    \bibitem{pos} X. Yang, L. Li, Z. Ji, T. J. Zhang, W. Jiang. Position: Multi-Agent Systems Should Prioritize Concurrency Control. \textit{ICML}, 2026. arXiv:2608.18092.
+  \end{thebibliography}
+\end{frame}
+
 \end{document}
