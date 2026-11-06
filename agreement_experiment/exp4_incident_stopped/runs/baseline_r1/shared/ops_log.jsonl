@@ -1,0 +1,60 @@
+{"t": 7.3, "agent": "agent1", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 7.8, "agent": "agent1", "verb": "logs", "args": ["db"], "remediation": false, "phase_after": 1}
+{"t": 7.8, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 7.9, "agent": "agent2", "verb": "logs", "args": ["app"], "remediation": false, "phase_after": 1}
+{"t": 8.3, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 8.3, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 15.9, "agent": "agent1", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 23.4, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 28.7, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 28.7, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 29.1, "agent": "agent2", "verb": "set-config", "args": ["app"], "remediation": true, "phase_after": 1}
+{"t": 29.1, "agent": "agent2", "verb": "logs", "args": ["app"], "remediation": false, "phase_after": 1}
+{"t": 32.9, "agent": "agent2", "verb": "status", "args": ["--help"], "remediation": false, "phase_after": 1}
+{"t": 32.9, "agent": "agent2", "verb": "status", "args": ["-v"], "remediation": false, "phase_after": 1}
+{"t": 96.9, "agent": "agent2", "verb": "set-config", "args": ["app", "db_pool_max_size", "4"], "remediation": true, "phase_after": 1}
+{"t": 96.9, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 107.7, "agent": "agent2", "verb": "set-config", "args": ["app", "db_pool_size", "4"], "remediation": true, "phase_after": 1}
+{"t": 107.8, "agent": "agent2", "verb": "set-config", "args": ["app", "pool_size", "4"], "remediation": true, "phase_after": 1}
+{"t": 107.8, "agent": "agent2", "verb": "set-config", "args": ["app", "max_pool_size", "4"], "remediation": true, "phase_after": 1}
+{"t": 107.8, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 112.9, "agent": "agent1", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 113.4, "agent": "agent2", "verb": "restart", "args": ["app"], "remediation": true, "phase_after": 1}
+{"t": 113.4, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 113.5, "agent": "agent2", "verb": "logs", "args": ["app"], "remediation": false, "phase_after": 1}
+{"t": 116.8, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 116.9, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 117.0, "agent": "agent1", "verb": "logs", "args": ["db"], "remediation": false, "phase_after": 1}
+{"t": 117.0, "agent": "agent1", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 125.3, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 125.4, "agent": "agent2", "verb": "logs", "args": ["db"], "remediation": false, "phase_after": 1}
+{"t": 125.4, "agent": "agent2", "verb": "logs", "args": ["app"], "remediation": false, "phase_after": 1}
+{"t": 129.2, "agent": "agent2", "verb": "scale", "args": ["app", "0"], "remediation": true, "phase_after": 1}
+{"t": 129.3, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 130.7, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 130.8, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 131.2, "agent": "agent2", "verb": "restart", "args": ["db"], "remediation": true, "phase_after": 1}
+{"t": 131.2, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 134.5, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 134.5, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 135.1, "agent": "agent1", "verb": "logs", "args": ["db"], "remediation": false, "phase_after": 1}
+{"t": 135.1, "agent": "agent1", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 139.2, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 143.3, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 143.3, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 143.4, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 144.3, "agent": "agent1", "verb": "logs", "args": ["db"], "remediation": false, "phase_after": 1}
+{"t": 147.1, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 269.4, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 269.5, "agent": "agent2", "verb": "logs", "args": ["app"], "remediation": false, "phase_after": 1}
+{"t": 271.5, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 271.6, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 272.1, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 272.1, "agent": "agent2", "verb": "logs", "args": ["app"], "remediation": false, "phase_after": 1}
+{"t": 275.5, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 275.8, "agent": "agent1", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 275.8, "agent": "agent1", "verb": "logs", "args": ["db"], "remediation": false, "phase_after": 1}
+{"t": 276.9, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 276.9, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 280.9, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 281.0, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}

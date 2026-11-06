@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 14,
+ "duration_ms": 53861,
+ "duration_api_ms": 52477,
+ "total_cost_usd": 0.013523100000000003,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done. It is in `/home/claude/exp7/runs/advisory_r2/agent2/repo/tax.py`, and I have left the decision log.\n\n**Shared decisions**\n- agent1 had already committed the units: money is float dollars and percents are fractions (0.10 = 10%). A missing lookup returns `None`. I followed these over our team's cents and `KeyError` convention, as the team rule requires.\n- I proposed and committed `tax_api` v1, which is the only interface agent3 needs:\n  - `compute_tax(lines, customer)` returns float dollars rounded to the cent (half up). `lines` is a list of `{category, amount}` where `amount` is unit price × quantity before discount. `customer` is the dict from `pricing.get_customer` or `None`.\n  - An unknown customer (`None`) pays 0.0.\n  - Tax is computed once on the invoice total, and tax.py never calls pricing. invoice.py adds the tax to its total.\n  - `get_tax_rate(region)` returns a fraction or `None`. `is_exempt(category)` returns a bool.\n  - A known customer whose region is not in `rates.csv` raises `ValueError`, so the code never silently charges 0%. This is my choice, not something RULES.md specifies.\n\n**Implementation**\n- Rates and exempt categories load from `data_tax/` relative to the module file.\n- Arithmetic uses `Decimal` built from each float's shortest repr, so float noise does not change the rounding.\n\n**Verification**\n- I ran a test script from the scratchpad against the module. All checks passed: rates, exemptions, the unknown customer, the discount plus half-up rounding (TX $100 with 10% off → $7.43, NY → $7.99), a food line being exempt, the OR 0% rate, and the unknown-region error.\n- I did not add test files to the repo.\n\nI also posted the API summary to the message board for agent3."
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 203456,
+ "duration_api_ms": 61461,
+ "total_cost_usd": 0.015764840000000002,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done, and it implements the committed `tax_api_v2` decision.\n\n**Interface**\n- `tax_rate(region)` returns the rate as a float fraction (0.0825 for TX). It returns 0.0 for `None` (unknown customer) and for OR. An unknown region string raises `KeyError`.\n- `tax_amount(region, lines, discount)` returns float dollars rounded half up to the cent. `lines` is a list of `(category, amount)` pairs in float dollars before discount. `discount` is a fraction (0.10 = 10% off).\n- Exempt categories (from `data_tax/exempt_categories.csv`) are excluded from the base. The base is `taxable * (1 - discount)`, and the tax is `base * rate`.\n\n**Decisions I made along the way**\n- The first proposal used cents and whole percents, which conflicted with the team's float-dollar and fraction convention. I withdrew it and adopted the team convention. Internal arithmetic is exact (`Decimal`).\n- `tax_api_v2` also replaces `TAX_PERCENT_API`, because invoice needs the rate for its `Tax (x%)` label. agent3 had proposed that separately.\n- I read the data files relative to the module file, so the module loads from any working directory.\n\n**Checks**\nI ran a quick smoke test, not a full test suite. It covered TX with an exempt category and a 10% discount (0.74), NY rounding (0.08875 → 0.09), `None` and OR (0.0), and an unknown region (`KeyError`).\n\n**Status**\nI have left the agreement log. `pricing_api` and `tax_api_v2` are committed. `tax_api`, `TAX_PERCENT_API`, and the other duplicate topics are withdrawn or superseded and have no open votes."
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 32,
+ "duration_ms": 372847,
+ "duration_api_ms": 116845,
+ "total_cost_usd": 0.029331719999999995,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is implemented and I've stopped. Against stub `pricing.py` and `tax.py` modules I wrote for testing, the sample order produces the exact expected output, and the unknown-customer and 0%-discount cases look right. I have not run it against the real teammate modules, since they are not in my copy of the repo.\n\n**Interfaces used (committed in the agreement log)**\n- `pricing_api` v2: `get_item(sku)` and `get_customer(cid)` return a dict or `None`. Prices are float dollars and discounts are fractions (0.10). I convert these to `Decimal` inside `invoice.py`.\n- `tax_api` v2: `compute_tax(taxable_lines, region, discount_pct)` returns integer cents. `taxable_lines` is a list of `(line_cents, category)` for known lines only. `rate_percent(region)` returns the displayed rate.\n\n**Choices I made**\n- The team standard is `Decimal` for money, but both committed APIs use floats or integer cents. I convert at the boundary, so the module's own arithmetic is `Decimal` and rounds half up to the cent.\n- The discount is `subtotal × percent`, rounded half up to the cent. `total = subtotal − discount + tax`.\n- Tax is never computed in `invoice.py`. Exempt categories are dropped inside `tax.py`. The example's Tax of $1.86 matches 8.25% of the discounted A line only ($22.50), which is consistent with that.\n- The discount line always prints with a leading `-`, so a 0% discount shows `-$0.00`.\n\n**Coordination notes**\n- The agreement log had competing proposals at first. I withdrew my own and accepted the teammates' `pricing_api` and `tax_api` topics. Both are now committed.\n- I withdrew my extra `tax_rate_percent` topic once `tax_api` v2 included `rate_percent`.\n- I left the agreement log after finishing.\n\n**Untested risks**\n- Integration with the real `pricing.py` and `tax.py` has not been run.\n- A sku with a `None` price or a missing `category` would raise an error. I did not add handling for that."
+}

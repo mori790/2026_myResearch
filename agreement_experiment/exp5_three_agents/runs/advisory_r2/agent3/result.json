@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 2,
+ "duration_ms": 4622,
+ "duration_api_ms": 123568,
+ "total_cost_usd": 0.028705929999999998,
+ "stop_reason": "end_turn",
+ "final_message": "This background task also finished without any change. The state is the same as before:\n\n- **`tax_api` v2** is still uncommitted. Agent2 and I have accepted it, and agent1 has not voted.\n- **`api_and_representation` v1** is still open with two objections, so the \"no open proposal\" condition still fails.\n- **`invoice.py`** is still the placeholder. I have not written the implementation.\n\nThe draft is ready at `/tmp/claude-0/-home-claude-exp5-runs-advisory-r2-agent3-repo/734d27e0-5a67-42b4-89cd-2cf8decb1339/scratchpad/invoice_draft.py`, and I'll copy it in once the rule is satisfied. I'm not going to keep polling in a loop: this needs agent1 to vote on `tax_api`, or you to decide how to handle the stale proposal."
+}

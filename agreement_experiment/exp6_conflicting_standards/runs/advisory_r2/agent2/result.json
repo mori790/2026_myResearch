@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 21,
+ "duration_ms": 156996,
+ "duration_api_ms": 77391,
+ "total_cost_usd": 0.019597870000000003,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is written at `/home/claude/exp6/runs/advisory_r2/agent2/repo/tax.py`, and I've left the decision log.\n\n**Committed decisions it follows**\n- `money_unit`: float dollars. This replaces my team's cents convention.\n- `percent_unit`: fractions (0.10 = 10%). This replaces my team's percent-number convention.\n- `lookup_miss`: a lookup that finds nothing returns `None`. This replaces my team's KeyError convention.\n- `pricing_api`: pricing supplies the customer's `region` and `discount` (fraction).\n- `tax.api` v2: `compute_tax(region, lines, discount) -> float`, where `lines` is a list of `[category, gross_amount]` before discount. It also provides `tax_rate(region) -> float | None`.\n- `tax.unknown_customer` v2: `region=None` gives 0.0. A non-null region that is not in `rates.csv` makes `tax_rate` return `None`, and `compute_tax` raises `ValueError`.\n\n**Choices I made within those decisions**\n- `compute_tax` raises `ValueError` for an unknown non-null region rather than returning 0. Silently charging 0% would under-tax, and the team agreed to this.\n- Arithmetic uses `Decimal`, converting floats via `str()`. Tax is rounded to the cent with ROUND_HALF_UP. The base is not rounded, per RULES.md.\n- Category matching is exact, after the CSV values are stripped. I did not add case-folding.\n- A discount outside 0–1 raises `ValueError`.\n\n**Checks run**\n- TX, $25.00 gross with a 10% discount gives $1.86, matching agent3's expected example.\n- Food is exempt.\n- NY 8.875% on $10.00 gives $0.89 (half up).\n- OR gives 0.0.\n- `None` gives 0.0.\n- An unknown region raises `ValueError`.\n- `tax_rate` returns the expected values.\n\nI did not run the full three-module integration; my copy has only placeholders for `pricing.py` and `invoice.py`."
+}

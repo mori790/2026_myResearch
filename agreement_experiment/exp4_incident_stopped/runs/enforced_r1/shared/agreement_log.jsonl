@@ -1,0 +1,4 @@
+{"kind": "init", "agent": "setup", "participants": ["agent1", "agent2", "agent3"], "seq": 0, "ts": 1793609992.9358056, "prev": "genesis", "hash": "8af8a3874a0a8772"}
+{"kind": "propose", "agent": "agent2", "topic": "commander", "value": "agent2", "why": "App-side pool exhaustion is the suspected root cause; agent1 and agent3 both proposed agent2 as commander.", "seq": 1, "ts": 1793610058.7219915, "prev": "8af8a3874a0a8772", "hash": "5e7a010e722b1514"}
+{"kind": "respond", "agent": "agent2", "topic": "commander", "version": 1, "vote": "accept", "why": "", "seq": 2, "ts": 1793610058.7753766, "prev": "5e7a010e722b1514", "hash": "ffa304164619ac2a"}
+{"kind": "respond", "agent": "agent3", "topic": "commander", "version": 1, "vote": "accept", "why": "", "seq": 3, "ts": 1793610061.3820953, "prev": "ffa304164619ac2a", "hash": "702014efdf000662"}

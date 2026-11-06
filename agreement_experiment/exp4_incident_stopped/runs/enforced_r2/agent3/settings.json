@@ -1,0 +1,1 @@
+{"hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "python3 /home/claude/exp4/harness/gate.py"}]}]}}

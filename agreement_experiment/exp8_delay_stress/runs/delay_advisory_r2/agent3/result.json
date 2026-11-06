@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 43,
+ "duration_ms": 296520,
+ "duration_api_ms": 134661,
+ "total_cost_usd": 0.035854739999999996,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is implemented and done. It's the only file I changed in `/home/claude/exp8/runs/delay_advisory_r2/agent3/repo/`.\n\n**Test result:** With stub `pricing.py` and `tax.py` (my own test files, not the teammates'), `render_invoice` reproduces your example output exactly. An unknown customer (`C9`) also renders with 0% discount and 0% tax. I did not test against the real pricing and tax modules, since they aren't in my copy.\n\n**Committed decisions it depends on:**\n- `PRICING_API` v2: `get_item(sku)` returns a dict with `price_cents` (int) and `category`, or `None`. `get_customer(cid)` returns `name`, `discount` (fraction, 0.10 = 10%), and `region`, or `None`.\n- `TAX_API` v2: `tax.compute_tax(region, lines, discount)` returns int cents. `lines` holds only the known items, as `{\"category\", \"amount_cents\"}`.\n- `TAX_RATE` v1: `tax.tax_rate(region)` returns a fraction, used only to display the tax percent.\n- `UNKNOWN_CUSTOMER_TAX` v1: a `None` region gives zero tax.\n\n**My choices:**\n- The discount is `subtotal × discount`, rounded half up to the cent. Total is `subtotal − discount + tax`.\n- Unknown SKUs are printed in place and left out of the tax input.\n- The unknown customer is shown by its id.\n- Percents are printed without trailing zeros.\n\n**Changes to my own proposals:** I withdrew my `MONEY_TYPE` and `PERCENT_REPR` proposals (Decimal dollars and multipliers) because the team converged on int cents and fractions. I also withdrew `TAX_PERCENT`, which was replaced by `TAX_RATE`.\n\n**Open risk:** If `tax` gets a region code that is not in `rates.csv`, it raises `KeyError`, and `render_invoice` does not catch it. That follows `UNKNOWN_CUSTOMER_TAX`, but it means a bad customer region crashes the whole invoice. Decide at integration whether that should be caught.\n\nI've run `agree.py leave` and sent the team a completion note."
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 17,
+ "duration_ms": 64355,
+ "duration_api_ms": 63168,
+ "total_cost_usd": 0.014106429999999998,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done and tested. Its API is committed as `tax_api` v1 in the decision log, and I've posted it on the message board.\n\n**What's in place**\n- `tax.py` loads `data_tax/rates.csv` and `data_tax/exempt_categories.csv` relative to the module file.\n- `compute_tax(lines, region, discount_pct=0)` takes `lines` as dicts of `{amount_cents, category}` and returns `{taxable_cents, rate_pct, tax_cents}`.\n- The rules are implemented as RULES.md states them. Exempt categories are excluded from the taxable base, the discount applies to the taxable amount, and the tax is rounded once, half up, using exact `Decimal` arithmetic. `region=None` (unknown customer) gives 0% tax.\n- `tax_rate_pct(region)` and `is_taxable(category)` are also public.\n- Team standard: money is int cents and percent is a percent number. An unknown region raises `KeyError`.\n- Non-int cents (e.g. float dollars) raise `TypeError`. Negative amounts and discounts outside 0..100 raise `ValueError`.\n\n**Testing**\n- I ran a test script from the scratchpad, not the repo, and it passed. It covers the TX, NY and OR rates, half-up rounding (742.5 → 743, 887.5 → 888), exempt items, the unknown customer, and the error cases.\n\n**Issue for the team**\n- agent1's committed `pricing_api` v1 uses float dollars and fraction discounts, which conflicts with our standard. agent3 has to convert before calling `compute_tax`: `amount_cents = round(price*100) * qty` and `discount_pct = discount_fraction*100`. I flagged this on the board. A fraction discount such as 0.1 passed by mistake can't be detected, so this conversion depends on agent3.\n\nI left the agreement log, since no one else is still waiting on me."
+}

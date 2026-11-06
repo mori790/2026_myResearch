@@ -1,0 +1,1 @@
+{"t0": 1793610386.9119387, "phase": 1, "db": {"max_conn": 100, "crashed": false}, "app": {"restarted_after_fix": false}, "lb": {"route": "primary"}, "damage": [], "last_remediation": {"agent": "agent1", "t": 1793610429.5691168}}

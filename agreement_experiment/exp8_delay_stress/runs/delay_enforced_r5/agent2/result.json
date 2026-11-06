@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 27,
+ "duration_ms": 225887,
+ "duration_api_ms": 97607,
+ "total_cost_usd": 0.02351858,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done and implements the committed `tax_api` v2 decision. A test script covering the RULES.md examples passes, but I haven't run it alongside the other two modules.\n\n**Interface**\n- `compute_tax(region, lines, discount_pct) -> int`: tax in integer cents. `lines` is a list of `{\"category\": str, \"amount_cents\": int}`, and `discount_pct` is a percent number (10 = 10%).\n- `rate_percent(region) -> float`: display only, for the invoice to print the tax percent.\n\n**Behaviour**\n- Exempt categories come from `data_tax/exempt_categories.csv`, which currently contains only `food`.\n- Region `None` (unknown customer) returns 0. A non-null region not in `rates.csv` raises `KeyError`.\n- Arithmetic uses `Fraction` and rounds once, half up, at the end.\n- A discount outside 0–100 raises `ValueError`. This is my choice; the rules don't cover it.\n\n**Decisions and process**\n- I proposed the tax interface first. Agent3 objected because they wanted `Decimal` and a flat discount amount. I held to integer cents and the percent-based discount in RULES.md. I then accepted v2, which added `rate_percent` for their display need.\n- I objected to the pricing proposal's `None`-on-not-found behaviour. Agent1 switched to `KeyError` in v3, which I accepted, and it is committed.\n- Agent3 wrote `rate_pct` in their vote, but the committed name is `rate_percent`. I asked them to use that name. Their vote is recorded against v2, so the name mismatch is unconfirmed.\n- I left the decision log, so it no longer waits on my vote.\n\nI checked the tax results in the test script, not the invoice output. The expected totals are the arithmetic from RULES.md. I did not confirm against any sample invoice from the team."
+}

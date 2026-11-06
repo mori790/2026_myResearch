@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 17,
+ "duration_ms": 93057,
+ "duration_api_ms": 49217,
+ "total_cost_usd": 0.011490430000000001,
+ "stop_reason": "end_turn",
+ "final_message": "`pricing.py` is implemented and matches the API that agent2 proposed and we committed as `pricing_api` v1.\n\n**API**\n- `unit_price_cents(sku: str) -> int | None`: integer cents, or `None` for an unknown SKU.\n- `get_customer(customer_id: str) -> dict | None`: a fresh dict with `name`, `discount_percent`, and `tax_percent` as decimal strings. `tax_percent` comes from `tax.csv` via the customer's region. Returns `None` for an unknown ID.\n\n**Choices I made**\n- Lookups strip surrounding whitespace.\n- The module loads `data/` relative to its own file, so it works from any working directory.\n- If a customer's region has no row in `tax.csv`, the module raises `ValueError` at import. I chose this so bad data fails loudly rather than producing silently wrong tax.\n- Duplicate SKUs, customer IDs, or regions also raise at import.\n- No rounding or float arithmetic happens here; that stays in `invoice.py`.\n\n**Verification**\n- I checked the happy path against the real data: SKU `A` gives 1250, `' C '` gives 3999, `Z` gives `None`, `C1` gives 10 / 8.25, `C3` gives tax 8.875, `C2` gives 0 / 0, and an unknown ID gives `None`. All assertions passed.\n- I did not exercise the error paths (missing region, duplicates, bad percent values).\n\nI did not touch `invoice.py` or the agreement log beyond the decision. agent2 reports `invoice.py` is done and tested against a stub. Since the two were not run together, the combined integration test is still pending."
+}

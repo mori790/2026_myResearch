@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 10,
+ "duration_ms": 92155,
+ "duration_api_ms": 31537,
+ "total_cost_usd": 0.007864300000000001,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is implemented and checked. I'm stopping here as the task asks.\n\n**What's in `tax.py`** (rules and data from `data_tax/`, loaded relative to the module file):\n\n- `compute_tax(region, lines, discount_pct) -> int` returns the tax in cents.\n  - `region` is a code such as `\"TX\"`. `None` (unknown customer) gives 0. An unknown code raises `KeyError`.\n  - `lines` is an iterable of `(category, amount_cents)` pairs. Categories listed in `exempt_categories.csv` are skipped.\n  - `discount_pct` is 0–100. Values outside that range raise `ValueError`.\n- `get_tax_pct(region) -> Decimal`, for showing the rate on an invoice.\n- `is_exempt(category) -> bool`.\n\n**Implementation choices:**\n\n- Rates are parsed as `Decimal`, so 8.875% is exact.\n- The base is not rounded before tax is applied. The final amount is rounded half up to the cent, as RULES.md specifies.\n- Category matching ignores case and surrounding whitespace.\n- A non-integer `amount_cents` raises `TypeError`, which catches callers that pass dollars or floats.\n\n**Verification:** I ran these checks with `python3 -I`:\n\n- TX, $10.00 → 83 cents (82.5 rounds up).\n- NY, $100.00 with 10% discount → 799 cents (798.75 rounds up).\n- Food is exempt in a mixed order.\n- Unknown customer, OR (0%), and empty lines → 0.\n- Bad region, float amount, and out-of-range discount each raise the expected error.\n\n**Team coordination:** I sent the API to agent1 and agent3 by message. No reply had arrived when I stopped. If they need a different shape, the interface can change, but it has not been recorded in `agree.py`."
+}

@@ -1,0 +1,16 @@
+cond,rep,wall_s,passed,total,success,error,agree_calls,topics,committed,committed_topics,messages,gate_blocks,cost_usd,g_example,g_basic,g_unknown,g_discount,g_tax,g_exempt,g_unknown_customer,g_combined
+advisory,1,324.9,14,14,True,,45,7,5,money_unit|percent_unit|missing_lookup_signal|pricing_api|tax_api,10,0,0.075,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,2,158.6,14,14,True,,49,7,6,money_unit|percent_unit|lookup_miss|pricing_api|tax.api|tax.unknown_customer,10,0,0.067,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,3,459.7,14,14,True,,51,6,4,pricing_api|money_units|tax_api|unknown_customer,13,0,0.075,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,4,130.3,14,14,True,,47,3,3,pricing.money_and_percent_units|pricing.api|tax.api,11,0,0.057,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,5,170.6,14,14,True,,54,6,6,MONEY_REPRESENTATION|PERCENT_REPRESENTATION|MISSING_LOOKUP_RESULT|PRICING_API|tax.api|tax.unknown_customer,17,0,0.084,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,1,176.2,14,14,True,,20,3,0,,7,0,0.044,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,2,251.5,14,14,True,,5,0,0,,5,0,0.031,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,3,119.3,14,14,True,,5,0,0,,6,0,0.033,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,4,135.6,14,14,True,,2,0,0,,4,0,0.035,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,5,149.4,14,14,True,,10,1,0,,4,0,0.032,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,1,149.6,14,14,True,,41,2,2,pricing_api|tax.interface,12,2,0.054,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,2,164.6,14,14,True,,42,2,2,pricing_api|tax_api,15,4,0.068,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,3,161.3,14,14,True,,40,2,2,pricing_api|tax_api,14,3,0.064,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,4,146.5,14,14,True,,41,2,2,pricing_api|tax_api,13,3,0.06,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,5,141.2,14,14,True,,39,2,2,tax_api|pricing_api,12,4,0.062,1/1,2/2,2/2,2/2,2/2,2/2,1/1,2/2

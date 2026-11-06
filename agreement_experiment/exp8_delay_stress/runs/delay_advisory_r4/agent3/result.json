@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 32,
+ "duration_ms": 295909,
+ "duration_api_ms": 116182,
+ "total_cost_usd": 0.03006341,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is done. `render_invoice(order)` reproduces the spec example exactly, and I've left the decision log.\n\n**Testing:** I ran it against stub `pricing.py` and `tax.py` modules kept in my scratchpad, since the real ones are still placeholders in my repo. The stubs were written to match the committed APIs. With those, the example output matched byte for byte. The unknown-customer case (shown by id, 0% discount and tax) and a 0% discount customer also rendered correctly. The real modules still need to be integrated and tested.\n\n**Shared decisions (all committed):**\n- `MONEY_UNIT`: float dollars. This differs from our team's usual Decimal convention, which I withdrew from in favour of the committed one.\n- `PERCENT_UNIT`: fractions (0.10 = 10%).\n- `LOOKUP_MISS`: lookups return `None` on a miss and never raise.\n- `PRICING_API` v2: `unit_price(sku)`, `item_name(sku)`, `item_category(sku)`, `customer(cid)`.\n- `tax.api` v2: `compute_tax(lines, region, discount)` and `rate(region)`. Tax applies the discount to the taxable base itself, so I pass undiscounted line amounts.\n- `tax.unknown_customer` v2: region `None` means 0% tax, and an unknown region is charged 0.\n\n**Choices I made:**\n- Each line shows the sku (`A x2 @ $12.50`), as the spec's example does. `item_name` is in the API but I don't print it, so it's unused for now.\n- Discount is rounded half up to the cent. Tax is rounded by `tax.py`, so I display it as returned.\n- If `tax.rate` returns `None` for a region missing from its rates, the tax line shows `0%`, as agent2 confirmed.\n\nAgent2 raised the rounding of tax in `tax.api` as an exception to `MONEY_UNIT`'s render-only rounding. I accepted it."
+}

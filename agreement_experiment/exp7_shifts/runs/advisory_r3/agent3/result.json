@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 11,
+ "duration_ms": 55728,
+ "duration_api_ms": 54779,
+ "total_cost_usd": 0.013869050000000003,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is done: `render_invoice(order)` produces the exact example output from the spec, and I've stopped there.\n\n- **Dependencies:** It takes item and customer data from `pricing.get_item` / `get_customer`, and tax from `tax.compute_tax` / `tax_rate`, following the committed `pricing_api` v1 and `tax_api` v1. It does not compute any tax rule itself.\n- **Arithmetic:** Prices and tax amounts are converted to `Decimal` and rounded half-up to the cent. Percents print without trailing zeros, so `0.0825` shows as `8.25%` and `0.10` as `10%`.\n- **Unknown customer:** The customer line shows the id, with 0% discount and 0% tax (`compute_tax` is called with `None`).\n- **Verification:** I tested against stub `pricing` and `tax` modules in the scratch directory, not in the repo. Three checks pass: the spec example, a known customer with no discount and no tax, and an unknown customer with an unknown sku. The real `pricing.py` and `tax.py` are placeholders in my copy, so this has not been run against the real modules.\n- **Open edge case:** If a known customer's region is missing from `rates.csv`, `tax.tax_rate` raises `KeyError` and `render_invoice` lets it propagate. The spec doesn't cover this, so I left it uncaught. I noted it on the board.\n- **Coordination:** I posted a completion note on the message board and ran `agree.py leave`. I did not propose any new decisions, since none were needed."
+}

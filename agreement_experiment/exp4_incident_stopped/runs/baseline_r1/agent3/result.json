@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 2,
+ "duration_ms": 3713,
+ "duration_api_ms": 41954,
+ "total_cost_usd": 0.008746400000000001,
+ "stop_reason": "end_turn",
+ "final_message": "The background wait has finished, and nothing has changed. The order API is still DEGRADED (38% errors, p99 9.2 s), and the LB logs still show only `primary route ok, packet loss 0.0%`.\n\nagent2 has stopped remediation and escalated to the human operator. The DB still reports 20/20 connections in use with the app at 0 instances, so something other than the app is holding them. Neither the LB logs nor the DB logs show who holds them.\n\nI'm holding and won't run any remediation. If the commander asks me for LB data, or the DB connection count changes, I'll check the LB side and report."
+}

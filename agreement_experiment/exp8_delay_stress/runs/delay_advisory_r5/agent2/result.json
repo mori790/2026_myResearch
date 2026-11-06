@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 134324,
+ "duration_api_ms": 77182,
+ "total_cost_usd": 0.019429610000000003,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done in `/home/claude/exp8/runs/delay_advisory_r5/agent2/repo/tax.py`, and I've left the decision log.\n\n**Committed decisions (shared log)**\n- **TAX_API v2:** `compute_tax(lines, region, discount_pct) -> int cents`, where `lines` is a list of `(category, amount_cents)`. Invoice computes each line's cents from quantity and price, and pricing supplies only the category. `tax_percent(region)` returns the rate as a percent number, so invoice can print it. I withdrew v1 after agent3 objected and re-proposed it as v2.\n- **TAX_UNKNOWN:** `region=None` means an unknown customer and gives 0 tax. Any other region missing from `rates.csv` raises `KeyError`. This reconciles RULES.md (unknown customer pays 0%) with the team's KeyError standard.\n- **pricing_api (agent1's proposal):** I accepted it. Pricing returns dollars as floats and discounts as fractions. Invoice converts them to cents and percent at the boundary.\n\n**Implementation**\n- Loads `data_tax/rates.csv` and `data_tax/exempt_categories.csv` relative to the module file.\n- Taxable total = sum of non-exempt line amounts. Then `tax = taxable × (100 − discount_pct) × rate / 10000`, computed in `Decimal` and rounded once, half up, to the cent.\n- Bad input raises errors: a non-int amount raises `TypeError`, and a discount outside 0–100 raises `ValueError`.\n\n**Testing**\n- 15 checks pass, including the spec example (2500c, 10% off, TX gives 186c), NY 8.875% rounding (199.6875 → 200), exempt \"food\", OR at 0%, unknown customer, and the error cases.\n- I have not tested against the other modules, since only placeholders exist in my copy.\n\n**Open points**\n- `tax_percent` returns a `float`, not a `Decimal`. This is fine for display; I can change it if agent3 needs exact decimals.\n- Category matching is exact and case-sensitive, and the data file only lists `food`."
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 1,
+ "duration_ms": 2307,
+ "duration_api_ms": 91407,
+ "total_cost_usd": 0.022312970000000005,
+ "stop_reason": "end_turn",
+ "final_message": "The background wait for agent1's pricing reply has finished. Its output was the pricing API I already used, so nothing changes. `invoice.py` is complete and I've stopped, as the task asked."
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 23,
+ "duration_ms": 147055,
+ "duration_api_ms": 64770,
+ "total_cost_usd": 0.017701349999999998,
+ "stop_reason": "end_turn",
+ "final_message": "`pricing.py` is done and committed to the shared interface.\n\n**What it does**\n- `get_item(sku)` returns `{\"sku\", \"name\", \"price\", \"category\"}` or `None`. Prices are float dollars, converted from `price_cents`.\n- `get_customer(customer_id)` returns `{\"id\", \"name\", \"discount\", \"region\"}` or `None`. The discount is a fraction off, converted from `discount_pct` (10 becomes 0.10).\n- Data is loaded from `data_pricing/` relative to the module file. Returned dicts are copies, so callers can't mutate the cached data.\n- I checked it by hand: known and unknown SKUs and customers return the expected values. I did not write a test file, since only `pricing.py` is the deliverable.\n\n**Shared decisions (both committed)**\n- `pricing_api` v2: float dollars, discounts as fractions off, `None` on a miss. I withdrew my v1 and proposed v2 after agent3 asked for a different function set. I kept the `None` convention rather than adopting their sentinel values. Agent3 accepted it and agent2 voted on it.\n- `tax_api` v2 (agent2's proposal): `compute_tax(region, lines, discount)` returns Decimal dollars. Its discount and units match pricing. I accepted it.\n\n**Open issue**\n- Agent3 objected to `tax_api` v2 because invoice needs a `tax_percent` helper. That objection was never resolved, and `tax_api` committed without it. Agent3 has said invoice works around it by probing `compute_tax`. If you want the helper, that is agent2's module, so it needs a new proposal.\n\n**Other notes**\n- My first command was blocked by a harness hook until a decision was committed. The hook requires that for any deliverable write, so I negotiated first.\n- Agent2 and agent3 both departed from their own teams' standards to match the committed units. I've recorded that in the decision log.\n- I've left the agreement with `agree.py leave`, so later votes won't wait on me."
+}

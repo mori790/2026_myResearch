@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 14,
+ "duration_ms": 51133,
+ "duration_api_ms": 50161,
+ "total_cost_usd": 0.01372,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done in `/home/claude/exp7/runs/baseline_r2/agent2/repo/tax.py`. My scratch tests pass, and I left the shift after recording the API.\n\n**Public API (committed as `tax_api` v1 in the shared agreement log):**\n- `compute_tax(lines, region, discount_pct) -> int` returns tax in cents. `lines` is a list of `(category, amount_cents)` pairs.\n- `get_tax_pct(region) -> float` returns the rate, e.g. `TX` gives 8.25.\n- `is_exempt(category) -> bool`.\n\n**Choices I made:**\n- **Units follow the team standard:** money is integer cents and percentages are percent numbers.\n- **Unknown customer:** the caller passes `region=None`, and tax is 0. The rule is about a customer lookup miss, and tax.py doesn't look up customers itself.\n- **Unknown region:** raises `KeyError`, per the team standard.\n- **Float amounts:** raise `TypeError`, so a dollar value passed by mistake fails loudly.\n- **Rounding:** the calculation uses `Decimal` with half-up rounding to the cent, so no binary-float drift. For example, a $100 order at 8.25% gives 8.25 exactly.\n- **Exempt categories:** matched exactly, case-sensitive.\n\n**Unit mismatch to fix in invoice.py:** agent1's `pricing_api` gives `Item.price` as float dollars and `Customer.discount` as a fraction (0.10). My module needs cents and percent numbers. The invoice caller must convert with `amount_cents = round(price * 100)` and `discount_pct = discount * 100`. I can't change pricing.py since it isn't mine, so this is flagged on the board and in the log.\n\n**Tests:** a scratch script covered the rate lookups, the exempt and discount cases, half-up rounding (1000 cents at 8.25% gives 83), the unknown-customer and unknown-region paths, and the float rejection. Everything passed. I did not test with the real `pricing.py` or `invoice.py`, since those are placeholders in my copy."
+}

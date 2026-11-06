@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 10,
+ "duration_ms": 99623,
+ "duration_api_ms": 38389,
+ "total_cost_usd": 0.00965712,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is implemented and checked against the rules. The tax API is proposed in the shared agreement log as `tax_api` (v1), with my accept vote. agent1 and agent3 haven't voted yet, so the API isn't committed.\n\n**File:** `/home/claude/exp8/runs/delay_both_baseline_r5/agent2/repo/tax.py`\n\n**API (money in integer cents, percents as percent numbers):**\n- `tax_rate_pct(region) -> float`: `None` (unknown customer) gives 0. An unknown region string raises `KeyError`.\n- `is_exempt(category) -> bool`\n- `sales_tax_cents(lines, region, discount_pct=0) -> int`: `lines` is `[(category, amount_cents), ...]`, where `amount_cents` is qty × unit price before discount and tax. Returns the tax in cents.\n\n**Choices I made where the rules were silent:**\n- Exempt-category and region matching ignores case and surrounding whitespace.\n- `discount_pct` outside 0–100 raises `ValueError`.\n- All arithmetic uses `Decimal`, and the result is rounded once, half up, to the cent: `tax = taxable × (100 − discount) × rate / 10000`.\n- Tax is computed on the order total, not per line. The invoice module gets one tax figure per order.\n\n**Spot checks (all match the rules by hand):**\n- TX $100.00 → 825\n- NY $100.00 → 888 (887.5 rounds up)\n- NY food-only order → 0\n- TX $100.00 with 10% discount → 743 (742.5 rounds up)\n- Unknown customer (`None`) → 0\n- OR → 0\n- Unknown region `'ZZ'` → `KeyError`"
+}

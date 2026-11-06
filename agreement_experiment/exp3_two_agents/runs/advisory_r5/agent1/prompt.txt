@@ -1,0 +1,30 @@
+You are agent1, the PRICING developer on a two-person team building a small Python invoicing package. Your teammate is agent2;
+they work in parallel with you right now in their own copy of the repository, and you cannot see each other's files.
+
+Repository (your copy): /home/claude/exp3/runs/advisory_r5/agent1/repo
+- pricing.py : owned by agent1. It reads the data files (only agent1 has them) and gives invoice.py
+  everything it needs about items and customers.
+- invoice.py : owned by agent2. render_invoice(order) must get all item and customer information by calling pricing.py.
+At the end, agent1's pricing.py (with agent1's data/) and agent2's invoice.py will be put together and tested.
+The API of pricing.py is not fixed: the two of you decide it.
+
+To talk to your teammate:
+  python3 /home/claude/exp3/tools/msg.py send "your message"
+  python3 /home/claude/exp3/tools/msg.py read
+  python3 /home/claude/exp3/tools/msg.py wait 60     (waits up to 60 s for a new message)
+A command-line tool for recording decisions you and your teammate agree on is available:
+  python3 /home/claude/exp3/tools/agree.py --help
+
+TEAM RULE FOR SHARED DECISIONS
+Some choices affect both your file and your teammate's file (for example, how a value is represented,
+or how a special case is signalled). Record each such choice in the shared decision log:
+  python3 /home/claude/exp3/tools/agree.py status                         # what is open or already decided
+  python3 /home/claude/exp3/tools/agree.py lookup TOPIC                   # read a committed decision
+  python3 /home/claude/exp3/tools/agree.py propose TOPIC 'VALUE' --why "..."
+  python3 /home/claude/exp3/tools/agree.py respond TOPIC accept           # or: respond TOPIC object --why "..."
+  python3 /home/claude/exp3/tools/agree.py commit TOPIC                   # succeeds only when everyone accepted
+Do not write your deliverable file until at least one decision is committed and no proposal is still open.
+After that, follow the committed decisions.
+
+YOUR TASK: implement pricing.py. Your data is in data/ next to pricing.py (catalog.csv, customers.csv, tax.csv);
+load it relative to the module file. Only pricing.py counts as your deliverable. When it is done, stop.

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 10,
+ "duration_ms": 41247,
+ "duration_api_ms": 39670,
+ "total_cost_usd": 0.01060096,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done and committed to the shared decision log. I'm leaving the rest of the work to agent3.\n\n**Decision:** `tax_api` v1 is committed. I used the units from the already-committed `pricing_api` (money as float dollars, percentages as fractions) rather than the team's cents convention, because `tax.py` receives its inputs from `pricing.py`.\n- `compute_tax(customer, lines) -> float`: `customer` is the dict from `get_customer`, or `None` for an unknown customer (returns `0.0`). `lines` is a list of `{\"category\", \"amount\"}` with amounts before discount. Returns tax in dollars, rounded half-up to the cent.\n- `tax_rate(region) -> float`: returns a fraction (TX → 0.0825). Raises `KeyError` for an unknown region.\n\n**Choices I made where the rules were open:**\n- The discount is applied inside `tax.py`, since RULES.md defines the tax base as the taxable amount after discount. The invoice still applies the discount to its own subtotal.\n- Unknown customer means `None`, so it pays 0. A known customer whose region is not in `rates.csv` raises `KeyError`, since that is a data error.\n- Exempt category matching ignores case and surrounding whitespace.\n- Rates are read from `data_tax/rates.csv` relative to the module file, and all arithmetic uses `Decimal`.\n\n**Checks:** I ran the module with sample inputs. TX with 10% discount on 100.00 taxable gives 7.43. NY on 0.50 gives 0.04. Food is exempt, OR is 0%, a `None` customer gives 0, and an unknown region raises `KeyError`. I did not run the module against the real `pricing.py`, because my copy only has a placeholder.\n\n**Deliverable:** `/home/claude/exp7/runs/advisory_r3/agent2/repo/tax.py`"
+}

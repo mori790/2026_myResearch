@@ -1,0 +1,2 @@
+{"agent": "agent2", "block": "gate", "why": "no decision is committed yet"}
+{"agent": "agent3", "block": "gate", "why": "these proposals are still open: pricing_api"}

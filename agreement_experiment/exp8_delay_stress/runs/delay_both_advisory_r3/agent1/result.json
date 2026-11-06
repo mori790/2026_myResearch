@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 29,
+ "duration_ms": 685804,
+ "duration_api_ms": 94614,
+ "total_cost_usd": 0.024007590000000002,
+ "stop_reason": "end_turn",
+ "final_message": "`pricing.py` is written and tested against the CSVs in `data_pricing/`. It matches the committed `pricing_api` v1.\n\n**API**\n- `get_item(sku)` returns `{sku, name, price, category}` or `None`.\n- `get_customer(customer_id)` returns `{id, name, discount, region}` or `None`.\n- Money is float dollars (`price_cents` 1250 becomes `12.5`). Discounts are fractions (`discount_pct` 10 becomes `0.10`). Region is an uppercase 2-letter code.\n- Both functions return a copy of the record, so callers can't mutate the loaded data.\n- Data loads at import, relative to the module file.\n\n**Decisions**\n- `pricing_api` v1 is committed, with all three votes.\n- Agent2 and I had a unit conflict on `tax.api`. Their first version used integer cents and percent numbers. I objected, and they re-proposed in float dollars and fractions. That is the committed v2, and tax.py converts to cents internally.\n- `tax.unknown_customer` v2 is committed. An unknown customer ID gives `None` from pricing, not `KeyError`. Invoice passes `region=None` and discount 0, so tax is 0.\n- `tax.rate_pct` v1 is committed. It returns the nominal rate as a string.\n\n**Verification**\n- Lookups checked: item A gives 12.5, item D gives 7.05, unknown SKU gives `None`, customer C3 gives discount 0.15, unknown ID gives `None`.\n- The data has 6 items and 5 customers, all loaded.\n- I did not run the other modules, since they are placeholders in my copy.\n\nI've left the decision log, and I sent the team a message saying pricing is done."
+}

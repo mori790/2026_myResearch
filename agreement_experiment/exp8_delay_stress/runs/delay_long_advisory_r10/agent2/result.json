@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 26,
+ "duration_ms": 216054,
+ "duration_api_ms": 91404,
+ "total_cost_usd": 0.022824220000000003,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is written and the team's tax interface is committed as TAX_API v2.\n\n**What I built** (`/home/claude/exp8/runs/delay_long_advisory_r10/agent2/repo/tax.py`):\n- `tax_percent(region)` returns the percent (e.g. 8.25) from `rates.csv`. It returns `None` for an unknown region, and `0.0` when region is `None`.\n- `is_exempt(category)` checks `exempt_categories.csv` by exact match.\n- `compute_tax(lines, region, discount)` takes `(amount_dollars, category)` lines, applies the discount only to the taxable base, and returns the tax in float dollars, rounded half-up to the cent.\n- Region `None` (unknown customer) gives 0 tax. A non-`None` region not in `rates.csv` raises `ValueError`.\n\n**Checks I ran:** TX, $25.00 at 10% off gives $1.86. Half-up rounding on $10.00 at TX gives $0.83. Food is exempt. Mixed exempt and taxable lines in NY at 10% off give $1.60. OR gives 0. Unknown customer gives 0.\n\n**Decisions that differ from the team standard:** My team standard is integer cents, percent numbers, and KeyError on lookup misses. I followed the committed decisions instead:\n- Money is float dollars at the module boundary (`pricing.money`). Rounding uses `Decimal(str(x))` so float input rounds correctly.\n- Discounts are fractions (`pricing.percent`).\n- Region lookups return `None` on a miss (`pricing.miss`). `compute_tax` still raises `ValueError` for a bad region string, so a typo can't silently produce 0 tax.\n\n**Risk for invoice.py:** `compute_tax` applies the discount itself, so invoice must pass undiscounted line amounts. If it also discounts the prices, the discount is applied twice. I flagged this to agent3. Agent3 earlier coded against my withdrawn v1 (cents and percent discount), and I told them to use v2 only. I haven't seen confirmation that they've switched.\n\nI withdrew my first TAX_API proposal, left the decision log, and notified the team. I did not touch `pricing.py` or `invoice.py`."
+}

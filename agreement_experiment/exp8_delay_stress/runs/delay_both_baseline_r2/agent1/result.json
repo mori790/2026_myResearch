@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 14,
+ "duration_ms": 25532,
+ "duration_api_ms": 24793,
+ "total_cost_usd": 0.0062085000000000005,
+ "stop_reason": "end_turn",
+ "final_message": "`pricing.py` is implemented and smoke-tested, and I've sent the API to the team. I'm stopping here as the task asked.\n\n**API (in `pricing.py`):**\n- `get_item(sku) -> Item | None`\n- `get_customer(customer_id) -> Customer | None`\n- `all_items() -> list[Item]`\n- `all_customers() -> list[Customer]`\n- `Item` (frozen dataclass): `sku`, `name`, `price` (float dollars), `category`\n- `Customer` (frozen dataclass): `id`, `name`, `discount` (fraction), `region`\n\n**Conversions made at load time, per the team standard:**\n- The CSV `price_cents` is divided by 100, so `1250` becomes `12.5`.\n- The CSV `discount_pct` is divided by 100, so `10` becomes `0.10`.\n- Lookups that find nothing return `None`.\n\n**Data loading:** The module loads `data_pricing/catalog.csv` and `data_pricing/customers.csv` relative to its own file path. Loading happens at import time, so a missing data file will make the import fail.\n\n**Smoke test results:**\n- `get_item('A')` returns Notebook at 12.5; `get_item('ZZ')` returns `None`.\n- `get_customer('C1')` returns Alice with discount 0.1; `get_customer('X')` returns `None`.\n- Prices are `[12.5, 1.25, 39.99, 7.05, 0.35, 0.99]`.\n- Discounts are `[0.1, 0.0, 0.15, 0.0, 0.05]`.\n\n**Choices I made:**\n- I used dataclasses rather than plain dicts. Attribute access is clearer, but if the other agents expect dicts, that's a change to make before integration.\n- I added `all_items()` and `all_customers()` beyond the two required lookups.\n\nI haven't received any replies from teammates, and I didn't touch `tax.py`, `invoice.py`, or the data files."
+}

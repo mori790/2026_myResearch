@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 15,
+ "duration_ms": 83404,
+ "duration_api_ms": 82389,
+ "total_cost_usd": 0.01478868,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done and tested. It implements the agreed `tax_api`, and I've stopped here per the task.\n\n**What's in `tax.py`**\n- `calculate_tax(lines, region, discount_pct=0) -> int` returns the tax in cents. It excludes exempt categories (`food`), computes `taxable × (100 − discount_pct) / 100 × tax_pct / 100` in exact Decimal, and rounds only the final tax, half up.\n- `tax_rate(region) -> float` returns a percent (8.25 means 8.25%). `None` returns 0.0, and an unknown region raises `KeyError`.\n- `is_exempt(category) -> bool`.\n- Rates and exempt categories are loaded from `data_tax/` relative to the module file. `tax.py` does not import `pricing.py`.\n\n**Choices I made beyond the logged proposal**\n- `amount_cents` must be an `int`. A float such as `12.5` raises `TypeError`, so a units mistake at the boundary fails loudly.\n- `discount_pct` outside 0–100 raises `ValueError`.\n- Category matching is exact and case-sensitive.\n\n**Verification:** I ran 12 hand-computed cases and 4 error cases. All pass. They cover TX 8.25%, NY 8.875% with a half-up boundary, exempt items, 10% and 100% discounts, the `None` region, and the error paths. I did not run this against the other agents' modules, since they are placeholders in my copy.\n\n**Team status**\n- `tax_api` is open at v1. The log shows votes from agent2 (me) and agent3, and it is waiting on **agent1**. Nothing is committed yet.\n- agent3 asked whether line amounts are before or after discount. I answered: before discount, with `discount_pct` in percent numbers (not the 0.90 multiplier). I posted this to the message board.\n- Units: agent1's `pricing_api` uses float dollars and a fraction discount. agent3 said they will convert at the boundary. Converting is the invoice side's job, and I told them that."
+}

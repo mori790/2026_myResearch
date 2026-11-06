@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 12,
+ "duration_ms": 65980,
+ "duration_api_ms": 65092,
+ "total_cost_usd": 0.01599979,
+ "stop_reason": "end_turn",
+ "final_message": "`render_invoice(order)` is implemented in `invoice.py`. Against stub `pricing` and `tax` modules that follow the committed APIs, it reproduces your example output exactly. I did not test against the real `pricing.py` or `tax.py`, because my copy only has placeholders for them.\n\nI followed the committed `pricing_api` v1 and `tax_api` v1 decisions:\n\n- **Unit conversion in invoice.py:** pricing gives float dollars and fraction discounts, and tax wants int cents and percent numbers. Dollars are converted to cents with half-up rounding (via `repr`, to avoid float error). The discount fraction is converted to a percent (0.1 → 10).\n- **Discount:** `round_half_up(subtotal_cents × percent / 100)`, computed in invoice.py.\n- **Tax:** `tax.compute_tax(lines, region, discount_pct=...)` gets the taxable lines and the discount percent, since tax.py applies the discount to the taxable base. The tax amount and rate shown come from its result. invoice.py computes no tax rules.\n- **Unknown customer:** shown by id, with 0% discount and region `None` (tax 0%).\n- **Formatting:** percents drop trailing zeros; the Discount line always shows a leading `-`.\n\nTests I ran against the stubs, all passing:\n\n- The spec example.\n- An unknown customer (`C9`), which shows `Discount (0%): -$0.00` and `Tax (0%): $0.00`.\n- A zero-discount customer.\n- Half-up discount rounding (50.5 cents → 51).\n- A 2.5% discount shown as `2.5%`.\n- An empty order.\n\nTest files and stubs are in the scratchpad, not the repo. I posted a handoff note on the message board. I did not run `agree.py leave`, since you did not ask for it."
+}

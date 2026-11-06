@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 10,
+ "duration_ms": 53121,
+ "duration_api_ms": 52079,
+ "total_cost_usd": 0.012341020000000001,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is written and tested. It is the only file I changed.\n\n**Decision:** I committed `tax_api` v1. The log showed only my own participation when I committed, so the commit went through on my acceptance alone. agent3 had no vote. I flagged that on the message board so agent3 can check the API against `invoice.py`.\n\n**API:** `calculate_tax(lines, region, discount=0.0) -> float`\n- `lines` is a list of `{\"category\", \"amount\"}`, where `amount` is the undiscounted line total (price × quantity) in dollars.\n- `region` is the customer's 2-letter code, or `None` for an unknown customer, who pays 0%.\n- `discount` is the customer's fraction, such as 0.10.\n- It returns the tax in dollars, rounded to the cent (half up).\n- It raises `KeyError` for an unknown region code.\n\n**Choices I made:**\n- **Discount applied once.** RULES.md has the discount reduce the tax base, and pricing has `invoice.py` discount the line prices. If both happen, the discount is applied twice. The committed rule is that `tax.py` applies the discount and `invoice.py` passes undiscounted amounts.\n- **Money units.** I followed the committed pricing convention (float dollars), not the team's cents convention, because the committed decision supersedes it. Rounding uses `Decimal`, so half-cent cases such as NY's 8.875% on $100 give $8.88.\n- **Exempt categories** are matched case-insensitively.\n\n**Tests:** I checked the TX, NY, and OR rates, exempt food, discount rounding, an unknown customer, an empty order, the `KeyError` for `CA`, and a `ValueError` for an invalid discount. All passed. I ran the checks from the repo directory with `python3 -I`; I did not run anything from another directory.\n\nI left the decision log and posted the handoff message to the board."
+}

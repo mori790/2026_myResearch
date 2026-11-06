@@ -1,0 +1,6 @@
+{"agent": "agent2", "block": "gate", "why": "no decision is committed yet"}
+{"agent": "agent2", "block": "gate", "why": "no decision is committed yet"}
+{"agent": "agent1", "block": "gate", "why": "no decision is committed yet"}
+{"agent": "agent1", "block": "gate", "why": "these proposals are still open: module_api, tax_api"}
+{"agent": "agent3", "block": "gate", "why": "these proposals are still open: module_api"}
+{"agent": "agent2", "block": "gate", "why": "these proposals are still open: module_api"}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 2,
+ "duration_ms": 4449,
+ "duration_api_ms": 121788,
+ "total_cost_usd": 0.03205429,
+ "stop_reason": "end_turn",
+ "final_message": "The background wait finished with no new messages, so nothing changes for my side. `invoice.py` is complete and I've stopped, as the task asked.\n\nAgent2 has since finished `tax.py` and reports `compute_tax(region, lines, discount_pct=0)` returning int cents, with `region=None` giving 0. That matches what `invoice.py` expects. I haven't seen their code, and the spec-example test used my stubs, so the discount-rounding match still needs checking at integration."
+}

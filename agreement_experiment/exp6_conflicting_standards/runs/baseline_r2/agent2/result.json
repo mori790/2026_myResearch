@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 12,
+ "duration_ms": 32984,
+ "duration_api_ms": 32650,
+ "total_cost_usd": 0.0089856,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is implemented in `/home/claude/exp6/runs/baseline_r2/agent2/repo/tax.py`. It is the only file I changed.\n\n**API** (also sent to the team; no replies yet):\n- `compute_tax(region, lines, discount_pct=0) -> int` returns tax in cents. `lines` is an iterable of `(category, amount_cents)`.\n- `tax_pct(region)` returns a `Decimal`, `taxable_amount(lines)` returns cents, and `is_exempt(category)` returns a bool.\n\n**Behaviour, following `data_tax/RULES.md`:**\n- Exempt categories (currently `food`) are excluded from the taxable total.\n- The discount is applied once to the taxable total: `base = taxable * (100 - d) / 100`.\n- `tax = base * rate / 100`, rounded half up to the cent. Intermediate values are exact `Decimal`s, and only the final tax is rounded.\n- A region of `None` (unknown customer) gives 0% tax.\n- An unknown region code raises `KeyError`.\n- A discount outside 0–100 raises `ValueError`.\n- Amounts must be ints (cents), otherwise `TypeError`.\n\n**Checks run:**\n- TX $10.00 → 83 (82.5 rounds up).\n- NY $10.00 with 10% discount → 80 (79.875 rounds up).\n- TX food-only order → 0.\n- Unknown customer → 0.\n- OR → 0.\n- Unknown region → `KeyError`.\n- Discount 101 → `ValueError`.\n\nI did not run the full package, because `pricing.py` and `invoice.py` are placeholders in my copy. Category matching is exact and case-sensitive, since the rules don't specify otherwise."
+}

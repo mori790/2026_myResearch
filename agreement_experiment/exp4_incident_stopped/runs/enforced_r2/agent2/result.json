@@ -1,0 +1,10 @@
+{
+ "subtype": null,
+ "is_error": true,
+ "num_turns": null,
+ "duration_ms": null,
+ "duration_api_ms": null,
+ "total_cost_usd": null,
+ "stop_reason": null,
+ "final_message": null
+}

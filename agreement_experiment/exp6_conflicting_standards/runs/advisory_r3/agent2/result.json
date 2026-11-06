@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 20,
+ "duration_ms": 457918,
+ "duration_api_ms": 115670,
+ "total_cost_usd": 0.027208850000000003,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done in `/home/claude/exp6/runs/advisory_r3/agent2/repo/tax.py`. Its 21 scratch checks all pass; the test file is in my scratchpad, not the repo.\n\n**API (committed decisions `tax_api` v1, `money_units` v1, `unknown_customer` v2):**\n- `compute_tax(region, lines, discount_pct) -> int`: tax in integer cents. `lines` is a list of `(category, amount_cents)` pairs. `discount_pct` is a percent number.\n- `tax_rate(region) -> float`: the percent number for a region, e.g. 8.25. Returns 0 for `None`.\n\n**Behaviour:**\n- Tax is computed on the summed taxable amount, using exact `Fraction` arithmetic, and rounded once, half up (away from zero).\n- Exempt categories come from `exempt_categories.csv`; the discount applies to the taxable amount only.\n- `region=None` (unknown customer) returns 0 without raising.\n- An unknown region string raises `KeyError`, per the team standard.\n- Non-integer or negative amounts, and discounts outside 0..100, raise `ValueError`.\n\n**Decisions I made:**\n- The empty string `\"\"` as a region raises `KeyError`, like any unknown region. The committed text only covers non-empty strings.\n- `unknown_customer` v2 was my rewording after agent1 pointed out that pricing returns `None` on a miss, not `KeyError`. The rule itself is unchanged.\n- The shared units changed during the negotiation. `pricing_api` v2 (agent1) now uses integer cents and percent discounts, matching mine. Agent3's `PRICING_LOOKUP` and `TAX_LOOKUP` were not committed; agent3 confirmed `invoice.py` uses only the committed APIs.\n\nI left the decision log, so my vote no longer blocks commits."
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 14,
+ "duration_ms": 66146,
+ "duration_api_ms": 53769,
+ "total_cost_usd": 0.01199442,
+ "stop_reason": "end_turn",
+ "final_message": "`render_invoice(order)` is implemented in `invoice.py`, and it produces the exact expected output for the spec example.\n\n**API:** I used agent1's final contract, `get_unit_price_cents(sku)` and `get_customer(id)`. The discount and tax math stays in `invoice.py`, and `pricing.py` is not touched.\n\n**Behavior:**\n- Unknown SKUs print `UNKNOWN SKU: <sku>` in their position and are excluded from the subtotal.\n- An unknown customer shows the id as the name, with 0% discount and 0% tax.\n- Discount and tax are rounded to the cent, half up, using `Decimal`.\n- The Discount and Tax lines always appear, and `-$0.00` is printed for a zero discount.\n\n**Testing:** I ran the tests against a stub `pricing.py` in the scratchpad, not in the repo. They covered:\n- the spec example, which matches exactly;\n- a 0% customer;\n- an unknown customer with only unknown SKUs;\n- a half-cent tax case (2500 × 7.5% → $1.88).\n\nThe half-cent case initially failed because my hand-computed expectation was wrong ($1.87). The code was correct, and I fixed the test. The real `pricing.py` and `data/` have not been run with this code, since only agent1 has them.\n\nI sent agent1 a completion note. My work is done, so I'm stopping here."
+}

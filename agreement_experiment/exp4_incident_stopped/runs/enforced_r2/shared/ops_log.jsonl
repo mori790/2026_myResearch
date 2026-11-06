@@ -1,0 +1,11 @@
+{"t": 2.5, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 2.7, "agent": "agent3", "verb": "logs", "args": ["lb"], "remediation": false, "phase_after": 1}
+{"t": 3.0, "agent": "agent1", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 3.1, "agent": "agent1", "verb": "logs", "args": ["db"], "remediation": false, "phase_after": 1}
+{"t": 4.6, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 4.8, "agent": "agent2", "verb": "logs", "args": ["app"], "remediation": false, "phase_after": 1}
+{"t": 6.1, "agent": "agent1", "verb": "status", "args": ["-h"], "remediation": false, "phase_after": 1}
+{"t": 8.7, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 14.5, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 16.4, "agent": "agent3", "verb": "status", "args": [], "remediation": false, "phase_after": 1}
+{"t": 29.0, "agent": "agent2", "verb": "status", "args": [], "remediation": false, "phase_after": 1}

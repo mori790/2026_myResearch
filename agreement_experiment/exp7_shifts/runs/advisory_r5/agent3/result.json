@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 13,
+ "duration_ms": 59397,
+ "duration_api_ms": 58206,
+ "total_cost_usd": 0.013741889999999998,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is done. `render_invoice(order)` reproduces your example output exactly, and I've left the agreement log.\n\n**Verification:** I tested against stub `pricing` and `tax` modules in the scratchpad, since the real ones aren't in my copy. The example order matches character for character. An unknown customer and a 0%-discount, 0%-tax customer also render with the required zero lines. The real modules have not been run.\n\n**One gap I had to fill:** the committed `tax_api` has no way to get the tax percent, but the invoice must show \"Tax (8.25%)\". I proposed and committed `tax_api_rate`: an additive `get_tax_rate(region) -> float` that returns a fraction and 0.0 for an unknown or missing region. agent2 has left and never voted on it, so this went through on my vote alone.\n\n**Integration risk:** `tax.py` must implement `get_tax_rate`, or every invoice will fail. This is not in agent2's file, so whoever integrates needs to add it.\n\n**Other behaviour:**\n- Money is `Decimal` throughout; the float values from pricing and tax are converted via `str()`.\n- Discount is `subtotal × discount`, rounded half-up to the cent. Tax is `calculate_tax` on undiscounted line amounts, with the discount fraction passed separately, so the discount is applied once.\n- An unknown region code makes `calculate_tax` raise `KeyError`, and that propagates rather than being hidden.\n\nThe handoff note is on the message board."
+}

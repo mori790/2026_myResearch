@@ -1,0 +1,6 @@
+id,name,discount_pct,region
+C1,Alice,10,TX
+C2,Bob,0,OR
+C3,Chen,15,NY
+C4,Dana,0,TX
+C5,Eve,5,OR

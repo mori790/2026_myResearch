@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 15,
+ "duration_ms": 71491,
+ "duration_api_ms": 69887,
+ "total_cost_usd": 0.016083220000000002,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is done: `render_invoice(order)` produces the example output exactly. I tested it against stand-in `pricing` and `tax` modules that follow the committed `pricing_api` v1 and `tax_api` v1 decisions. I did not test it against the real `pricing.py` or `tax.py`, since my copy only has placeholders for those.\n\nHow it works:\n- **Units:** Pricing gives float dollars and fractions, and tax takes int cents and percent numbers. The conversion happens at the boundary, and the rest of the arithmetic uses `Decimal` dollars.\n- **Tax:** Only non-exempt lines (per `tax.is_exempt`) go to `tax.compute_tax`, which applies the discount itself. `invoice.py` does not implement any tax rules.\n- **Unknown customer:** Shown by id, with 0% discount and 0% tax.\n- **Percent display:** Trailing zeros are dropped (`10`, `8.25`, `0`).\n\nOpen point: if a known customer has a region that `tax.py` doesn't know, `tax.py` raises `KeyError`, and `render_invoice` lets it propagate. I chose that over silently charging 0% tax. Changing it is a one-line decision if the team prefers the default-value convention.\n\nI posted a completion note on the message board. I did not record anything in the decision log, since no new cross-module API was introduced."
+}

@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 25,
+ "duration_ms": 120548,
+ "duration_api_ms": 82167,
+ "total_cost_usd": 0.01744204,
+ "stop_reason": "end_turn",
+ "final_message": "`pricing.py` is done and smoke-tested. It implements the committed `pricing_api` v1 decision.\n\n**What's in it**\n- `get_item(sku)` returns `{\"sku\", \"name\", \"unit_price_cents\" (int), \"category\"}`, or `None` if the SKU is unknown.\n- `get_customer(customer_id)` returns `{\"id\", \"name\", \"discount_pct\" (int, 0 if none), \"region\"}`, or `None` if the customer is unknown.\n- Data is loaded from `data_pricing/catalog.csv` and `data_pricing/customers.csv`, resolved relative to the module file. Duplicate IDs raise `ValueError`.\n- Lookups return copies, so callers can't mutate the module's data.\n\n**Decisions I made**\n- **Units changed from my team's standard.** My standard is float dollars and fractional percentages. The tax team and invoice team use integer cents and percent numbers, and the task says cross-module APIs are ours to decide. I objected once, then withdrew and adopted cents and percent numbers so the team could settle. My team's standard does not apply to these cross-module values. Within `pricing.py` I still returned `None` for not-found lookups.\n- **No defaults in pricing.** Unknown SKUs and customers return `None`, and `invoice.py` decides what to do with them.\n\n**Shared log state**\n- `tax_api` v2 is committed. `pricing_api` v1 is committed.\n- I left the decision log, so later votes will not wait for me.\n\n**Checks run**\n- `get_item('A')`, `get_item('D')`, `get_customer('C1')`, `get_customer('C3')` return the expected values.\n- `get_item('Z')` and `get_customer('C9')` return `None`.\n- I did not run the full three-module integration, since the other modules are placeholders in my copy."
+}

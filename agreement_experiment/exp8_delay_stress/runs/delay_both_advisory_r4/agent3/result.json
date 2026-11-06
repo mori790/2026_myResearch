@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 33,
+ "duration_ms": 453992,
+ "duration_api_ms": 132458,
+ "total_cost_usd": 0.030860390000000005,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is implemented, and I've stopped as requested.\n\n**Verification:** I ran it against stub `pricing.py` and `tax.py` modules I wrote in my scratchpad (the repo's placeholders don't have the real functions). The `C1` / `[A×2, D×2, Z×1]` order produces exactly the expected 8-line output. I also checked an unknown customer (shown by id, 0% discount and tax) and a 0%-discount customer. The real modules have not been tested because the teammates' code isn't in my copy.\n\n**Decisions (committed in the shared log):**\n- `pricing_api` v2: `get_item(sku)` returns `{sku, name, price_cents, category}` or `None`. `get_customer(cid)` returns `{id, name, discount_pct, region}` or `None`. Money is integer cents and percentages are percent numbers (10 = 10%). This departs from my team's usual `Decimal`/multiplier convention, as the log requires.\n- `tax_api` v1: `compute_tax(lines, region, discount_pct)` returns integer cents, with `lines` being `(category, amount_cents)` for known items. `tax_rate(region)` gives the percent to print. `region=None` means an unknown customer and returns 0.\n\n**What invoice.py does:** it sums line amounts, computes the discount itself as subtotal × pct, rounded half up to the cent, and passes the known lines and discount to `tax.compute_tax`. It does not apply any tax rules.\n\n**Open items:**\n- `tax_unknown_region` still shows as open in `agree.py status`, but `commit` and `withdraw` both report that no open proposal exists. Its rules are already in committed `tax_api` v1, so nothing is blocked, but the log is inconsistent and someone may need to look at it.\n- I ran `agree.py leave` before the deliverable was written, since all decisions were settled. Later votes won't wait for me.\n- Output uses no thousands separators (e.g. `$1234.00`). The spec doesn't say either way."
+}

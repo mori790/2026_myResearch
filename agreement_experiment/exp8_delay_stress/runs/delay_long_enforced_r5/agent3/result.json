@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 36,
+ "duration_ms": 248827,
+ "duration_api_ms": 131997,
+ "total_cost_usd": 0.030182850000000004,
+ "stop_reason": "end_turn",
+ "final_message": "`invoice.py` is done. `render_invoice(order)` produces the exact expected output for the sample order (`C1`, lines `A×2`, `D×2`, `Z×1`). I also checked an unknown customer and an empty order.\n\n**Testing:** I ran it against stub `pricing.py` and `tax.py` modules in the scratchpad, not the repo. The repo's placeholders are untouched. The real modules have not been tested together yet.\n\n**API decisions:**\n- My first proposal conflicted with what the team had already put in the agreement log, so I dropped it. `invoice.py` uses the committed APIs:\n  - `pricing.get_item(sku)` returns an item or `None`; the code reads `price_cents` and `category`.\n  - `pricing.get_customer(cid)` returns a customer or `None`; the code reads `name`, `discount_pct` and `region`.\n  - `tax.compute_tax(region, discount_pct, lines)` returns integer cents. `lines` is a list of `{\"category\", \"amount_cents\"}` dicts for known SKUs only.\n  - `tax.rate_for_region(region)` gives the displayed tax percent. It is not called for unknown customers.\n- **Unknown customer:** shown by id, `region=None`, 0% discount, and 0% tax. The code does not look up any tax rules itself.\n- **Money:** integer cents at the tax boundary, as committed in `tax.money_units`. The team decision overrides the team coding standard's Decimal-dollars convention. Decimal is used only for the discount's half-up rounding.\n- **Discount:** computed in `invoice.py` as subtotal × `discount_pct` / 100, rounded half up to the cent. `compute_tax` gets the same `discount_pct` and applies the discount to the taxable sum itself.\n\n**Agreement log:** `tax.api`, `pricing_api` v2, `tax.unknown_customer` v2 and `tax.money_units` v2 are all committed. The first two versions of the tax decisions were aborted after agent1's objection and re-proposed as v2 by agent2. I ran `agree.py leave`, so later commits no longer wait for me."
+}

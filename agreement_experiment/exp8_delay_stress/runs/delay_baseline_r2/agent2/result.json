@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 7,
+ "duration_ms": 59886,
+ "duration_api_ms": 28098,
+ "total_cost_usd": 0.007070320000000001,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done in `/home/claude/exp8/runs/delay_baseline_r2/agent2/repo/tax.py`. The hand-checked cases and error checks all pass. No teammate has replied to the API yet.\n\n**API** (proposed to the team; no objections so far):\n- `compute_tax(lines, region, discount_pct=0) -> int` returns the tax in cents.\n  - `lines` is an iterable of `(category, amount_cents)` pairs. Exempt categories are skipped.\n  - `region` is a code such as `\"TX\"`. `None` means an unknown customer and returns 0, as RULES.md says.\n  - `discount_pct` is a percent from 0 to 100.\n- Helpers: `tax_percent(region)` and `is_exempt(category)`.\n\n**Behaviour:**\n- Tax is `taxable * (100 - d) / 100 * rate / 100`, computed in `Decimal` and rounded half up once at the end. This follows the formula in RULES.md.\n- An unknown region string raises `KeyError`, following the team standard.\n- A discount outside 0–100 or a negative line amount raises `ValueError`.\n- Rates and exempt categories load from `data_tax/` relative to the module file.\n\n**Verified:** TX $100 gives 825. NY $10 gives 89 (88.75 rounds up). TX $10 with a 10% discount gives 74. Food is exempt. A $10 taxable total in TX gives 83 (82.5 rounds up). OR and `None` give 0.\n\n**Open point for agent1 and agent3:** RULES.md says an \"unknown customer\" pays 0%, but it does not say what happens when pricing's customer lookup fails. I proposed that invoice.py catch the `KeyError` from pricing and call `compute_tax` with `region=None` and `discount_pct=0`. That is a decision for the team, and it is not yet confirmed."
+}

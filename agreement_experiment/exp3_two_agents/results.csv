@@ -1,0 +1,16 @@
+cond,rep,wall_s,passed,total,success,error,agree_calls,topics,committed,committed_topics,messages,gate_blocks,cost_usd,g_example,g_basic,g_unknown,g_discount,g_tax,g_unknown_customer,g_combined
+advisory,1,79.9,12,12,True,,8,1,1,PRICING_API,2,0,0.021,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,2,247.9,12,12,True,,33,1,1,pricing_api,5,0,0.034,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,3,136.3,12,12,True,,28,1,1,pricing_api,10,0,0.038,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,4,224.8,12,12,True,,32,1,1,pricing_api,7,0,0.032,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+advisory,5,63.4,12,12,True,,15,1,1,pricing_api,4,0,0.022,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,1,51.9,12,12,True,,9,1,1,pricing_api,4,0,0.017,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,2,59.1,12,12,True,,7,1,0,,5,0,0.02,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,3,99.7,12,12,True,,4,0,0,,3,0,0.014,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,4,55.0,12,12,True,,2,0,0,,3,0,0.016,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+baseline,5,67.1,12,12,True,,2,0,0,,6,0,0.021,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,1,52.1,12,12,True,,9,1,1,pricing_api,5,1,0.02,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,2,94.0,12,12,True,,15,1,1,pricing_api,4,2,0.028,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,3,196.5,0,12,False,,16,1,0,,5,2,0.023,0/1,0/2,0/2,0/2,0/2,0/1,0/2
+enforced,4,84.9,12,12,True,,13,1,1,pricing_api,5,2,0.023,1/1,2/2,2/2,2/2,2/2,1/1,2/2
+enforced,5,156.9,12,12,True,,17,1,1,pricing-api,6,2,0.027,1/1,2/2,2/2,2/2,2/2,1/1,2/2

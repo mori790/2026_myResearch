@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 37,
+ "duration_ms": 175781,
+ "duration_api_ms": 125369,
+ "total_cost_usd": 0.029701580000000005,
+ "stop_reason": "end_turn",
+ "final_message": "`tax.py` is done. It implements the committed TAX_API v2 and passes my checks.\n\n**Interface** (`get_sales_tax(region, lines, discount)`):\n- `region`: `'TX'`, `'NY'`, or `'OR'`. `None` (unknown customer) returns `{\"rate\": 0.0, \"tax\": 0.0}`. An unknown region string returns `None`.\n- `lines`: a list of `{\"category\": str, \"amount\": float dollars}`, one per line item.\n- `discount`: a fraction (0.10 = 10%), applied only to the taxable base, so exempt lines are not discounted.\n- Returns `{\"rate\": float fraction, \"tax\": float dollars rounded half-up to 2 dp}`.\n\n**Decisions you should know about:**\n- **Team standard was overridden.** Our standard says integer cents, percent numbers, and KeyError on a miss. The committed PRICING_API and TAX_API use float dollars, fractions, and `None` on a miss. I objected to PRICING_API, then accepted it once agent3 adopted it, since the protocol says to follow committed decisions. Inside `tax.py`, amounts are converted to integer cents and the tax math is exact `Decimal`.\n- **Line amounts are rounded to the cent before taxing.** A line amount like `0.505` is rounded to `0.51` first. I chose this; the rules don't say.\n- **Categories match exactly after stripping whitespace.** `Food` does not match the exempt `food`. The rules don't specify case handling.\n- **A discount outside 0–1 raises `ValueError`.**\n\n**Tests:** I ran checks covering TX (8.25%), NY (8.875%), and OR (0%), exempt food, the discount on the taxable base, empty lines, unknown and `None` regions, and half-up rounding on the cent. All passed, but these were my own checks, not an integration test. The three modules have not been tested together.\n\nI ran `agree.py leave`, so the team no longer waits on my vote, and I posted a completion message."
+}

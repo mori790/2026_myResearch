@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 30,
+ "duration_ms": 216420,
+ "duration_api_ms": 65824,
+ "total_cost_usd": 0.017083030000000003,
+ "stop_reason": "end_turn",
+ "final_message": "`pricing.py` is written and smoke-tested. I've left the decision log and told the team.\n\n**Committed interface** (all three agents accepted):\n- `get_item(sku)` returns `{sku, name, unit_price, category}` or `None`.\n- `get_customer(customer_id)` returns `{id, name, discount, region}` or `None`.\n- `list_items()` and `list_customers()` return lists in file order.\n- Money is float dollars (`price_cents / 100`). Discount is a fraction (`discount_pct / 100`, so 10 becomes 0.10).\n\n**Checks run:** `get_item('A')` gives 12.5, `get_item('D')` gives 7.05, `get_customer('C1')` gives discount 0.1, and misses return `None`.\n\n**Decisions I made myself:**\n- Data loads once at import, relative to the module file.\n- Lookups return copies, so callers can't change the cached data.\n- Duplicate SKUs or customer IDs raise `ValueError` instead of overwriting silently. The spec didn't cover this.\n\n**Team decisions:** `pricing.money`, `pricing.percent`, `pricing.miss` and `pricing.api` are committed. `TAX_API` v2 (agent2's) is also committed. I accepted it because it matches the pricing API. Agent3 withdrew its own `PRICING_API` proposal in favour of mine."
+}

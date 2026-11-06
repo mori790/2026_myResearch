@@ -1,0 +1,10 @@
+{
+ "subtype": "success",
+ "is_error": false,
+ "num_turns": 11,
+ "duration_ms": 29287,
+ "duration_api_ms": 29050,
+ "total_cost_usd": 0.00682013,
+ "stop_reason": "end_turn",
+ "final_message": "`pricing.py` is done. It is the only file I changed, and I've stopped as the task asked.\n\n**What it provides**\n- `Item(sku, name, price_cents, category)` and `Customer(id, name, discount_pct, region)` as frozen dataclasses.\n- `get_item(sku)`, `get_customer(customer_id)`, `list_items()`, `list_customers()`.\n- `discounted_unit_price_cents(customer_id, sku)`, which applies the customer's percentage discount.\n- Unknown SKUs or customer IDs raise `UnknownSKU` or `UnknownCustomer`. Both subclass `KeyError`.\n- Data loads from `data_pricing/` relative to the module file, and the loader rejects duplicate IDs and out-of-range discounts.\n\n**Choices I made**\n- Money is integer cents throughout. The discount is rounded half-up to the nearest cent, so 705 cents at 15% off gives 599, and 35 cents at 5% off gives 33.\n- Pricing does not compute tax. It passes the customer's `region` through as data, and tax.py decides the rates from it.\n\n**Checks**\n- I ran a smoke test: 6 items and 5 customers loaded, the discount values above came out as expected, and unknown IDs raised the right exceptions.\n- I did not test against tax.py or invoice.py, because those are placeholders in my copy.\n\nI sent the proposed API to the team before implementing it, and I've posted a note that it's finished."
+}

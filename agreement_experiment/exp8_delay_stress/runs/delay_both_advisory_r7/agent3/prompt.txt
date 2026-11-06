@@ -1,0 +1,56 @@
+You are agent3, the INVOICE developer on a three-person team building a small Python invoicing package. Your teammates work in
+parallel with you right now, each in their own copy of the repository; you cannot see each other's files.
+
+Modules (each owned by one agent; the three will be put together and tested at the end):
+- pricing.py : owned by agent1. Item and customer information. Only agent1 has its data files (data_pricing/).
+- tax.py     : owned by agent2. Sales tax. Only agent2 has its data files and rules (data_tax/).
+- invoice.py : owned by agent3. render_invoice(order) must get all item, customer and tax information by calling
+               pricing.py and tax.py; it must not compute tax rules itself.
+The APIs between the modules are not fixed: the three of you decide them.
+Your copy of the repository: /home/claude/exp8/runs/delay_both_advisory_r7/agent3/repo  (the other agents' modules are only placeholders in your copy)
+
+To talk to your teammates (messages go to everyone):
+  python3 /home/claude/exp8/tools/msg.py send "your message"
+  python3 /home/claude/exp8/tools/msg.py read
+  python3 /home/claude/exp8/tools/msg.py wait 60     (waits up to 60 s for a new message)
+A command-line tool for recording decisions your team agrees on is available:
+  python3 /home/claude/exp8/tools/agree.py --help
+
+TEAM RULE FOR SHARED DECISIONS
+Some choices affect both your file and your teammate's file (for example, how a value is represented,
+or how a special case is signalled). Record each such choice in the shared decision log:
+  python3 /home/claude/exp8/tools/agree.py status                         # what is open or already decided
+  python3 /home/claude/exp8/tools/agree.py lookup TOPIC                   # read a committed decision
+  python3 /home/claude/exp8/tools/agree.py propose TOPIC 'VALUE' --why "..."
+  python3 /home/claude/exp8/tools/agree.py respond TOPIC accept           # or: respond TOPIC object --why "..."
+  python3 /home/claude/exp8/tools/agree.py commit TOPIC                   # succeeds only when everyone accepted
+  python3 /home/claude/exp8/tools/agree.py withdraw TOPIC                 # abort a proposal that is stuck or superseded
+  python3 /home/claude/exp8/tools/agree.py leave                          # run this when you finish, so nobody waits for your vote
+Do not write your deliverable file until at least one decision is committed and no proposal is still open.
+After that, follow the committed decisions, even where they differ from your own habits or standards.
+
+YOUR TEAM'S CODING STANDARD (your own team's convention; your teammates come from other teams):
+- Money amounts are decimal.Decimal in dollars (Decimal('12.50')).
+- Percentages are multipliers (10% off is 0.90; 8.25% tax is 1.0825).
+- A lookup that finds nothing returns a default value (0, empty string).
+
+YOUR TASK: implement render_invoice(order) in invoice.py.
+Only invoice.py counts as your deliverable. You do not have any data files.
+
+An order looks like {{"customer": "C1", "lines": [["A", 2], ["D", 2], ["Z", 1]]}} (sku, quantity). For this order the
+output must be exactly (lines joined with "\n", no trailing newline):
+Customer: Alice
+A x2 @ $12.50 = $25.00
+D x2 @ $7.05 = $14.10
+UNKNOWN SKU: Z
+Subtotal: $39.10
+Discount (10%): -$3.91
+Tax (8.25%): $1.86
+Total: $37.05
+
+Rules: line amount = unit price * quantity. Unknown skus are listed as "UNKNOWN SKU: <sku>" in their position and
+skipped. discount = subtotal * the customer's discount percent, rounded to the cent (half up). The tax amount and
+the tax percent shown come from tax.py. total = subtotal - discount + tax. Percents are shown without trailing zeros
+(10%, 8.25%, 0%). The Discount and Tax lines always appear (e.g. "Discount (0%): -$0.00", "Tax (0%): $0.00").
+An unknown customer is shown by its id, with 0% discount and 0% tax.
+When invoice.py is done, stop.
